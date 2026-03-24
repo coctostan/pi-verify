@@ -2,7 +2,13 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { ProgressUpdate, ParsedTestResult, WatchModeConfig } from "./types.js";
+import type {
+  ProgressUpdate,
+  ParsedTestResult,
+  WatchModeConfig,
+  ErrorCategory,
+  CategorizedError,
+} from "./types.js";
 
 export type { WatchModeConfig };
 const execAsync = promisify(exec);
@@ -18,6 +24,11 @@ export interface CheckResult {
   parsedTestResult?: ParsedTestResult;
 }
 
+export interface ErrorSummary {
+  total: number;
+  byCategory: Record<ErrorCategory, number>;
+  errors: CategorizedError[];
+}
 export interface VerifyResult {
   success: boolean;
   checks: CheckResult[];
@@ -26,6 +37,7 @@ export interface VerifyResult {
     failed: number;
     duration: number;
   };
+  errorSummary?: ErrorSummary;
 }
 
 interface PackageJson {
@@ -246,8 +258,7 @@ export async function runVerification(
   const passed = results.filter((r) => r.success).length;
   const failed = results.filter((r) => !r.success).length;
   const duration = Date.now() - startTime;
-
-  return {
+  const result: VerifyResult = {
     success: failed === 0,
     checks: results,
     summary: {
@@ -256,6 +267,12 @@ export async function runVerification(
       duration,
     },
   };
+
+  if (failed > 0) {
+    result.errorSummary = aggregateErrors(results);
+  }
+
+  return result;
 }
 
 /**
@@ -280,4 +297,143 @@ export function detectWatchMode(args: string[]): { enabled: boolean; flags: stri
 export function supportsWatchMode(config: { framework: string }): boolean {
   const supportedFrameworks = ["jest", "vitest"];
   return supportedFrameworks.includes(config.framework.toLowerCase());
+}
+
+/**
+ * Categorizes an error based on its output and check type
+ */
+export function categorizeError(output: string, checkType: CheckType): CategorizedError {
+  const lines = output.split("\n");
+  const firstLine = lines[0]?.trim() ?? "";
+
+  // Try to extract file path and line number
+  const locationMatch =
+    output.match(/([^\s(]+)\s*\((\d+),?\s*(\d+)?\)/) ??
+    output.match(/([^\s:]+):(\d+):(\d+)/) ??
+    output.match(/([^\s:]+):(\d+)/);
+
+  const file = locationMatch?.[1];
+  const line = locationMatch?.[2] ? parseInt(locationMatch[2], 10) : undefined;
+  const column = locationMatch?.[3] ? parseInt(locationMatch[3], 10) : undefined;
+
+  // Determine category based on patterns
+  let category: ErrorCategory = "Unknown";
+  let message = firstLine;
+
+  if (checkType === "typecheck" || output.includes("error TS")) {
+    category = "TypeError";
+    const tsErrorMatch = output.match(/error\s+TS\d+:\s*(.+)/);
+    if (tsErrorMatch) {
+      message = tsErrorMatch[1]?.trim() ?? firstLine;
+    }
+  } else if (checkType === "lint" || output.includes(" ESLint ") || output.includes("eslint")) {
+    category = "LintViolation";
+    const eslintMatch = output.match(/error\s+(.+?)(?:\s+\(|$)/);
+    if (eslintMatch) {
+      message = eslintMatch[1]?.trim() ?? firstLine;
+    }
+  } else if (
+    checkType === "test" ||
+    output.includes("✗") ||
+    output.includes("FAIL") ||
+    output.includes("failed")
+  ) {
+    category = "TestFailure";
+    const testMatch = output.match(/(?:✗|FAIL|failed)[:\s]*(.+)/i);
+    if (testMatch) {
+      message = testMatch[1]?.trim() ?? firstLine;
+    }
+  } else if (output.includes("SyntaxError") || output.includes("ParseError")) {
+    category = "SyntaxError";
+    const syntaxMatch = output.match(/(?:SyntaxError|ParseError):\s*(.+)/);
+    if (syntaxMatch) {
+      message = syntaxMatch[1]?.trim() ?? firstLine;
+    }
+  } else if (output.includes("config") || output.includes("cannot find")) {
+    category = "ConfigError";
+  }
+
+  return {
+    category,
+    message,
+    ...(file && { file }),
+    ...(line && { line }),
+    ...(column && { column }),
+    originalOutput: output,
+  };
+}
+
+/**
+ * Generates a suggestion for fixing an error
+ */
+export function getSuggestedFix(error: CategorizedError): string | undefined {
+  const { category, message, originalOutput } = error;
+
+  if (category === "TypeError") {
+    if (
+      originalOutput.includes("Cannot find module") ||
+      originalOutput.includes("cannot find module")
+    ) {
+      return "Run 'npm install' or 'pnpm install' to install missing dependencies";
+    }
+    if (originalOutput.includes("is not assignable to type")) {
+      return "Check type annotations and ensure types are compatible";
+    }
+  }
+
+  if (category === "LintViolation") {
+    if (message.includes("semicolon") || message.includes("comma")) {
+      return "Run 'pnpm run lint:fix' to auto-fix formatting issues";
+    }
+    if (message.includes("unused")) {
+      return "Remove unused variables or imports";
+    }
+  }
+
+  if (category === "TestFailure") {
+    if (originalOutput.includes("timeout") || originalOutput.includes("timed out")) {
+      return "Increase timeout in test config or check for infinite loops";
+    }
+    return "Review test assertions and expected values";
+  }
+
+  if (category === "ConfigError") {
+    return "Check configuration files and ensure all required settings are present";
+  }
+
+  return undefined;
+}
+
+/**
+ * Aggregates errors from all check results into a summary
+ */
+export function aggregateErrors(results: CheckResult[]): ErrorSummary {
+  const errors: CategorizedError[] = [];
+  const byCategory: Record<ErrorCategory, number> = {
+    SyntaxError: 0,
+    TypeError: 0,
+    TestFailure: 0,
+    LintViolation: 0,
+    ConfigError: 0,
+    Unknown: 0,
+  };
+
+  for (const result of results) {
+    if (!result.success && result.output) {
+      const categorized = categorizeError(result.output, result.type);
+      const suggestion = getSuggestedFix(categorized);
+      const error: CategorizedError = {
+        ...categorized,
+        ...(suggestion && { suggestion }),
+      };
+      errors.push(error);
+      byCategory[error.category]++;
+    }
+  }
+
+  return {
+    total: errors.length,
+    byCategory,
+    errors,
+  };
 }

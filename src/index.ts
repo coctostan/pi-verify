@@ -1,4 +1,5 @@
 import { Type } from "@sinclair/typebox";
+import chalk from "chalk";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import {
   DEFAULT_LABEL,
@@ -8,7 +9,12 @@ import {
   TOOL_NAME,
 } from "./constants.js";
 import { buildHelpText, parseSubcommand } from "./commands.js";
-import { runVerification, type VerifyResult, type CheckResult } from "./verify.js";
+import {
+  runVerification,
+  type VerifyResult,
+  type CheckResult,
+  type ErrorSummary,
+} from "./verify.js";
 import type { ExtensionState, VerifyInput } from "./types.js";
 
 export default function extensionTemplate(pi: ExtensionAPI) {
@@ -167,38 +173,41 @@ export default function extensionTemplate(pi: ExtensionAPI) {
     };
   }
 
-  function formatCheckResult(check: CheckResult): string {
-    const indicator = check.success ? "✓" : "✗";
+  function formatCheckResult(check: CheckResult, chalkInstance?: typeof chalk): string {
+    const indicator = check.success
+      ? (chalkInstance?.green("✓") ?? "✓")
+      : (chalkInstance?.red("✗") ?? "✗");
     const duration = (check.duration / 1000).toFixed(1);
-    let line = `${indicator} ${check.type}: ${duration}s`;
-
+    const typeLabel = chalkInstance?.cyan(check.type) ?? check.type;
+    let line = `${indicator} ${typeLabel}: ${duration}s`;
     if (check.parsedTestResult) {
       const { passed, failed, skipped } = check.parsedTestResult;
       const parts = [`${passed} passed`];
-      if (failed > 0) parts.push(`${failed} failed`);
+      if (failed > 0) parts.push(chalkInstance?.red(`${failed} failed`) ?? `${failed} failed`);
       if (skipped > 0) parts.push(`${skipped} skipped`);
       line += ` (${parts.join(", ")})`;
     } else if (!check.success && check.error) {
-      line += ` (${check.error})`;
+      line += ` (${chalkInstance?.red(check.error) ?? check.error})`;
     }
-
     return line;
   }
 
   function formatVerifyResult(result: VerifyResult): string {
     const lines: string[] = [];
-    const indicator = result.success ? "✓" : "✗";
+    const indicator = result.success ? chalk.green("✓") : chalk.red("✗");
     const duration = (result.summary.duration / 1000).toFixed(1);
-
     lines.push(
       `${indicator} ${result.summary.passed} passed, ${result.summary.failed} failed (${duration}s total)`
     );
     lines.push("");
-
     for (const check of result.checks) {
-      lines.push(formatCheckResult(check));
+      lines.push(formatCheckResult(check, chalk));
     }
-
+    // Add colored error summary if there are errors
+    if (!result.success && result.errorSummary) {
+      lines.push("");
+      lines.push(formatErrorSummary(result.errorSummary));
+    }
     return lines.join("\n");
   }
 
@@ -240,4 +249,51 @@ function isExtensionState(value: unknown): value is ExtensionState {
     typeof value === "object" &&
     typeof (value as { label?: unknown }).label === "string"
   );
+}
+
+/**
+ * Formats error summary with colors using chalk
+ */
+function formatErrorSummary(summary: ErrorSummary): string {
+  const lines: string[] = [];
+  // Header with total error count
+  const totalErrors = summary.total;
+  const categoryCounts = Object.entries(summary.byCategory).filter(([, count]) => count > 0);
+  const categoryText = categoryCounts
+    .map(([cat, count]) => `${count} ${cat.toLowerCase()}`)
+    .join(", ");
+  lines.push(
+    chalk.red.bold(`✗ ${totalErrors} error${totalErrors !== 1 ? "s" : ""} found (${categoryText})`)
+  );
+  lines.push("");
+  // Group errors by category
+  const errorsByCategory = new Map<string, typeof summary.errors>();
+  for (const error of summary.errors) {
+    const existing = errorsByCategory.get(error.category) ?? [];
+    existing.push(error);
+    errorsByCategory.set(error.category, existing);
+  }
+  // Display errors by category
+  for (const [category, errors] of errorsByCategory) {
+    if (errors.length === 0) continue;
+    // Category header in yellow
+    lines.push(chalk.yellow(`${category} (${errors.length}):`));
+    for (const error of errors) {
+      // File location in gray
+      if (error.file) {
+        const location = error.line
+          ? `${error.file}:${error.line}${error.column ? `:${error.column}` : ""}`
+          : error.file;
+        lines.push(chalk.gray(`  ${location}`));
+      }
+      // Error message in white
+      lines.push(chalk.white(`  → ${error.message}`));
+      // Suggestion with lightbulb emoji
+      if (error.suggestion) {
+        lines.push(chalk.cyan(`    💡 ${error.suggestion}`));
+      }
+      lines.push("");
+    }
+  }
+  return lines.join("\n");
 }

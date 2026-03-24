@@ -185,6 +185,74 @@ The extension uses `chalk` for colored terminal output:
 - ✗ Red for failing checks
 - ⏳ Yellow for warnings/watch mode status
 
+## Error Summarization
+
+When verification checks fail, the extension provides detailed error summarization:
+
+### Error Categories
+
+Errors are automatically categorized by type:
+
+| Category        | Description                      | Example                                                |
+| --------------- | -------------------------------- | ------------------------------------------------------ |
+| `TypeError`     | TypeScript type errors           | `error TS2345: Argument of type 'X' is not assignable` |
+| `LintViolation` | ESLint/Prettier violations       | `Missing semicolon`                                    |
+| `TestFailure`   | Failed test assertions           | `✗ test name`                                          |
+| `SyntaxError`   | Parse errors                     | `SyntaxError: Unexpected token`                        |
+| `ConfigError`   | Missing or invalid configuration | `Cannot find module`                                   |
+| `Unknown`       | Uncategorized errors             | —                                                      |
+
+### Actionable Suggestions
+
+The extension provides actionable suggestions for common errors:
+
+```
+✗ 3 errors found (2 type errors, 1 lint violation)
+
+TypeError (2):
+  src/index.ts:42
+  → Argument of type 'string' is not assignable to parameter of type 'number'
+    💡 Check type annotations and ensure types are compatible
+
+LintViolation (1):
+  src/utils.ts:15
+  → Missing semicolon
+    💡 Run 'pnpm run lint:fix' to auto-fix formatting issues
+```
+
+### Structured Output
+
+The `verify_check` tool includes an `errorSummary` field in its response:
+
+```json
+{
+  "success": false,
+  "checks": [...],
+  "summary": {...},
+  "errorSummary": {
+    "total": 3,
+    "byCategory": {
+      "TypeError": 2,
+      "LintViolation": 1,
+      "TestFailure": 0,
+      "SyntaxError": 0,
+      "ConfigError": 0,
+      "Unknown": 0
+    },
+    "errors": [
+      {
+        "category": "TypeError",
+        "message": "Argument of type 'string' is not assignable...",
+        "file": "src/index.ts",
+        "line": 42,
+        "originalOutput": "...",
+        "suggestion": "Check type annotations and ensure types are compatible"
+      }
+    ]
+  }
+}
+```
+
 ## Testing notes
 
 - `test/commands.test.ts`, `test/tool.test.ts`, `test/extension.test.ts` cover core template logic

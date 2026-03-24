@@ -39,3 +39,27 @@ export interface WatchModeResult {
   enabled: boolean;
   flags: string[];
 }
+
+export type ErrorCategory =
+  | "SyntaxError"
+  | "TypeError"
+  | "TestFailure"
+  | "LintViolation"
+  | "ConfigError"
+  | "Unknown";
+
+export interface CategorizedError {
+  category: ErrorCategory;
+  message: string;
+  file?: string;
+  line?: number;
+  column?: number;
+  originalOutput: string;
+  suggestion?: string;
+}
+
+export interface ErrorSummary {
+  total: number;
+  byCategory: Record<ErrorCategory, number>;
+  errors: CategorizedError[];
+}
