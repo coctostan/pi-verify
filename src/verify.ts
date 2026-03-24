@@ -130,6 +130,14 @@ export function parseTestOutput(output: string): ParsedTestResult | undefined {
   return { framework, passed, failed, skipped, tests };
 }
 
+/**
+ * Executes a single verification check (typecheck, test, lint, format, or build).
+ *
+ * @param type - The type of check to run
+ * @param cwd - The working directory to run the check in
+ * @param onProgress - Optional callback for progress updates during execution
+ * @returns The result of the check including success status, duration, and output
+ */
 export async function runCheck(
   type: CheckType,
   cwd: string,

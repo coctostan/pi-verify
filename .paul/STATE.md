@@ -14,7 +14,7 @@ Milestone: v0.2 Test Runner Improvements
 Phase: 2 of 4 (Test Output Formatting) — **MERGED**
 Plan: 02-01 complete, UNIFY finished, PR merged
 Status: Ready for Phase 3
-Last activity: 2026-03-24 — Fast-forward fix applied (quick → typecheck label)
+Last activity: 2026-03-24 — Hotfix: JSDoc comment for runCheck
 
 Progress:
 
@@ -35,18 +35,19 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Decisions
 
-| Date       | Decision                                                          | Phase   | Impact                              |
-| ---------- | ----------------------------------------------------------------- | ------- | ----------------------------------- |
-| 2026-03-24 | Implemented verification runner with async project detection      | Phase 1 | Enables Node.js auto-detection      |
-| 2026-03-24 | Used structured JSON output for all verification results          | Phase 1 | Model can parse without regex       |
+| Date | Decision | Phase | Impact |
+| ---- | -------- | ----- | ------ |
+| 2026-03-24 | Implemented verification runner with async project detection | Phase 1 | Enables Node.js auto-detection |
+| 2026-03-24 | Used structured JSON output for all verification results | Phase 1 | Model can parse without regex |
 | 2026-03-24 | Added progress callbacks to runCheck for real-time status updates | Phase 2 | Better UX during long-running tests |
-| 2026-03-24 | Created test output parser for Jest/Vitest/node:test              | Phase 2 | Structured test results available   |
+| 2026-03-24 | Created test output parser for Jest/Vitest/node:test | Phase 2 | Structured test results available |
 
 ### Fixes
 
-| Date       | Fix                                                                | Phase   | Commit  |
-| ---------- | ------------------------------------------------------------------ | ------- | ------- |
-| 2026-03-24 | (ff): /verify quick shows 'typecheck' instead of 'quick' in output | Phase 2 | 1561544 |
+| Date | Fix | Phase | Commit | Status |
+| ---- | --- | ----- | ------ | ------ |
+| 2026-03-24 | (ff): /verify quick shows 'typecheck' instead of 'quick' in output | Phase 2 | 1561544 | Complete |
+| 2026-03-24 | (hotfix): Add JSDoc comment to runCheck function | Phase 2 | dbaff46 | Pending retroactive UNIFY |
 
 ### Deferred Issues
 
@@ -56,11 +57,11 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Git State
 
-| Item        | Value                                           |
-| ----------- | ----------------------------------------------- |
-| Branch      | main                                            |
-| Last commit | 1561544 (fix: show 'typecheck' in quick output) |
-| PR #2       | MERGED ✓                                        |
+| Item | Value |
+| ---- | ----- |
+| Branch | main |
+| Last commit | dbaff46 (hotfix: Add JSDoc comment to runCheck function) |
+| PR #2 | MERGED ✓ |
 
 ### Blockers/Concerns
 
@@ -69,9 +70,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Phase 2 merged to main — v0.2.0 progressing
-Next action: Start Phase 3 (Watch Mode Support) or pause
+Stopped at: Hotfix committed — Pending retroactive UNIFY
+Next action: Run /paul:unify to document hotfix, or start Phase 3
 Resume file: .paul/ROADMAP.md
+
+**Pending retroactive UNIFY:** Hotfix — Add JSDoc comment to runCheck function (commit: dbaff46)
 
 ---
 
