@@ -14,7 +14,7 @@ Milestone: v0.2 Test Runner Improvements
 Phase: 2 of 4 (Test Output Formatting) — **MERGED**
 Plan: 02-01 complete, UNIFY finished, PR merged
 Status: Ready for Phase 3
-Last activity: 2026-03-24 — Hotfix: JSDoc comment for runCheck
+Last activity: 2026-03-24 — Hotfix documented via retroactive UNIFY
 
 Progress:
 
@@ -47,7 +47,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 | Date | Fix | Phase | Commit | Status |
 | ---- | --- | ----- | ------ | ------ |
 | 2026-03-24 | (ff): /verify quick shows 'typecheck' instead of 'quick' in output | Phase 2 | 1561544 | Complete |
-| 2026-03-24 | (hotfix): Add JSDoc comment to runCheck function | Phase 2 | dbaff46 | Pending retroactive UNIFY |
+| 2026-03-24 | (hotfix): Add JSDoc comment to runCheck function | Phase 2 | 6e8fb2a | Documented |
 
 ### Deferred Issues
 
@@ -60,7 +60,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 | Item | Value |
 | ---- | ----- |
 | Branch | main |
-| Last commit | dbaff46 (hotfix: Add JSDoc comment to runCheck function) |
+| Last commit | 6e8fb2a (hotfix: Add JSDoc comment to runCheck function) |
 | PR #2 | MERGED ✓ |
 
 ### Blockers/Concerns
@@ -70,11 +70,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Hotfix committed — Pending retroactive UNIFY
-Next action: Run /paul:unify to document hotfix, or start Phase 3
+Stopped at: Retroactive UNIFY complete — hotfix documented
+Next action: Start Phase 3 (Watch Mode Support) or pause
 Resume file: .paul/ROADMAP.md
-
-**Pending retroactive UNIFY:** Hotfix — Add JSDoc comment to runCheck function (commit: dbaff46)
 
 ---
 
