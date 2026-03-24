@@ -6,20 +6,20 @@ See: .paul/PROJECT.md (updated 2026-03-24)
 
 **Core value:** Saves AI coding agents tokens and time by providing unified, structured pass/fail verification feedback instead of requiring individual command execution and raw output parsing.
 
-**Current focus:** Phase 1 complete — awaiting merge
+**Current focus:** Phase 1 complete — v0.1.0 released
 
 ## Current Position
 
-Milestone: v0.1 Initial Release
-Phase: 1 of 1 (Core Verify Command) — Complete
-Plan: 01-01 complete, UNIFY finished
-Status: Ready for PR merge before next phase
-Last activity: 2026-03-24 — Created SUMMARY.md, loop closed
+Milestone: v0.1 Initial Release — **COMPLETE**
+Phase: 1 of 1 (Core Verify Command) — **COMPLETE**
+Plan: 01-01 complete, UNIFY finished, PR merged
+Status: Ready for next milestone
+Last activity: 2026-03-24 — Phase 1 merged to main
 
 Progress:
 
 - Phase 1: [██████████] 100%
-- Milestone: [████████░░] 80%
+- Milestone: [██████████] 100% ✓
 
 ## Loop Position
 
@@ -27,7 +27,7 @@ Current loop state:
 
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Loop complete — awaiting merge]
+  ○        ○        ○     [Ready for next milestone]
 ```
 
 ## Accumulated Context
@@ -41,28 +41,28 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Deferred Issues
 
-- Multi-language support (Rust/Python/Go) — Phase 2
-- Caching of check results — Phase 2
-- Custom check configurations — Phase 2
+- Multi-language support (Rust/Python/Go) — v0.2.0
+- Caching of check results — v0.2.0
+- Custom check configurations — v0.2.0
 
 ### Git State
 
 | Item | Value |
 | ---- | ----- |
-| Branch | feature/01-core-verify-command |
-| PR | https://github.com/coctostan/pi-verify/pull/1 (state: open) |
-| CI | Pending |
+| Branch | main |
+| Last commit | fe6dd63 (Phase 1 merge) |
+| PR | https://github.com/coctostan/pi-verify/pull/1 (state: MERGED) |
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: UNIFY complete — SUMMARY.md created
-Next action: Merge PR to complete Phase 1, then start Phase 2
-Resume file: .paul/phases/01-core-verify-command/01-01-SUMMARY.md
+Stopped at: Phase 1 merged to main — v0.1.0 complete
+Next action: Define v0.2.0 scope or start Phase 2 for multi-language support
+Resume file: .paul/PROJECT.md
 
 ---
 
