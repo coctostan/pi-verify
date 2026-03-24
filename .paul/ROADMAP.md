@@ -19,6 +19,15 @@ Phases: 4 of 4 complete
 Theme: Improve test output formatting, add watch mode detection, and better error summarization
 for the verify command
 
+## Current Milestone
+
+**v0.3 Module Audit** (v0.3.0) ✓
+Status: Complete
+Phases: 1 of 1 complete
+
+Theme: Adversarial testing of PALS module enforcement — validate that TODD, WALT, and DEAN
+catch regressions and violations during apply.
+
 ## Phases
 
 | Phase | Name                   | Plans | Status   | Completed  |
@@ -27,29 +36,24 @@ for the verify command
 | 2     | Test Output Formatting | 02-01 | Complete | 2026-03-24 |
 | 3     | Watch Mode Support     | 03-01 | Complete | 2026-03-24 |
 | 4     | Error Summarization    | 04-01 | Complete | 2026-03-24 |
+| 5     | Adversarial Testing    | 05-01 | Complete | 2026-03-24 |
 
 ## Phase Details
 
-### Phase 2: Test Output Formatting
+### Phase 5: Adversarial Testing
 
-Focus: Improve formatting of test command output with better progress indicators and structured
-results
+Focus: Intentionally introduce a breaking change to `detectProjectType` (always returns
+`'unknown'`) to verify that TODD's post-task hook catches the test regression before APPLY
+completes.
 
-### Phase 3: Watch Mode Support
-
-Focus: Detect and support watch mode for test runners, with proper handling for long-running
-processes
-
-### Phase 4: Error Summarization
-
-Focus: Better error aggregation and summarization across all verification checks
+Plans: TBD (defined during /paul:plan)
 
 ## Future Milestones
 
-- v0.3: Multi-language support (Rust/Python/Go)
-- v0.4: Caching of check results
-- v0.5: Custom check configurations
+- v0.4: Multi-language support (Rust/Python/Go)
+- v0.5: Caching of check results
+- v0.6: Custom check configurations
 
 ---
 
-_Roadmap updated: 2026-03-24 — v0.2 milestone complete_
+_Roadmap updated: 2026-03-24 — v0.3 Module Audit complete_
