@@ -42,3 +42,19 @@ jobs:
 
       - name: Check formatting
         run: pnpm run format:check
+
+      - name: Verify chalk installation
+        run: |
+          if ! grep -q '"chalk"' package.json; then
+            echo "Error: chalk dependency not found in package.json"
+            exit 1
+          fi
+          echo "✓ Chalk dependency verified"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.xml
+          if-no-files-found: ignore

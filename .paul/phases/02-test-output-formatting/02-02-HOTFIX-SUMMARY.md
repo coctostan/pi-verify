@@ -15,8 +15,8 @@ completed: 2026-03-24T12:25:00Z
 
 ### Files Changed
 
-| File | Change |
-|------|--------|
+| File            | Change                                                                             |
+| --------------- | ---------------------------------------------------------------------------------- |
 | `src/verify.ts` | Added JSDoc comment to `runCheck` function documenting parameters and return value |
 
 ### Context
@@ -33,4 +33,4 @@ Hotfix applied and documented retroactively. No functional changes—documentati
 
 ---
 
-*Hotfix documented: 2026-03-24*
+_Hotfix documented: 2026-03-24_
