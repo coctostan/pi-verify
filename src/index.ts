@@ -44,7 +44,9 @@ export default function extensionTemplate(pi: ExtensionAPI) {
         case "test":
         case "lint":
         case "quick": {
-          notify(ctx, `Running verification: ${name}...`);
+          // Map 'quick' to 'typecheck' for display (quick runs typecheck + lint)
+          const displayName = name === "quick" ? "typecheck" : name;
+          notify(ctx, `Running verification: ${displayName}...`);
           try {
             // Update status bar during execution
             if (ctx.hasUI) {
