@@ -11,7 +11,7 @@ void test("parseSubcommand splits name and rest", () => {
 });
 
 void test("parseSubcommand handles single word", () => {
-  assert.deepEqual(parseSubcommand("status"), { name: "status", rest: "" });
+  assert.deepEqual(parseSubcommand("all"), { name: "all", rest: "" });
 });
 
 void test("parseSubcommand handles empty input", () => {
@@ -20,12 +20,14 @@ void test("parseSubcommand handles empty input", () => {
 });
 
 void test("parseSubcommand lowercases name", () => {
-  assert.deepEqual(parseSubcommand("STATUS"), { name: "status", rest: "" });
-  assert.deepEqual(parseSubcommand("Set-Label Hello"), { name: "set-label", rest: "Hello" });
+  assert.deepEqual(parseSubcommand("ALL"), { name: "all", rest: "" });
+  assert.deepEqual(parseSubcommand("Quick Check"), { name: "quick", rest: "Check" });
 });
 
 void test("buildHelpText includes command name", () => {
   const help = buildHelpText();
-  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} status`));
-  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} set-label <text>`));
+  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} all`));
+  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} test`));
+  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} lint`));
+  assert.match(help, new RegExp(`/${EXTENSION_COMMAND} quick`));
 });

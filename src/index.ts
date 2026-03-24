@@ -8,8 +8,8 @@ import {
   TOOL_NAME,
 } from "./constants.js";
 import { buildHelpText, parseSubcommand } from "./commands.js";
-import { buildEchoText } from "./tool.js";
-import type { ExtensionState } from "./types.js";
+import { runVerification, type VerifyResult, type CheckResult } from "./verify.js";
+import type { ExtensionState, VerifyInput } from "./types.js";
 
 export default function extensionTemplate(pi: ExtensionAPI) {
   let state: ExtensionState = { label: DEFAULT_LABEL };
@@ -17,7 +17,8 @@ export default function extensionTemplate(pi: ExtensionAPI) {
   function syncState(ctx: Pick<ExtensionContext, "sessionManager" | "hasUI" | "ui">): void {
     state = restoreFromContext(ctx);
     if (ctx.hasUI) {
-      ctx.ui.setStatus(EXTENSION_COMMAND, `${EXTENSION_NAME}: ${state.label}`);
+      const statusText = buildStatusText(state);
+      ctx.ui.setStatus(EXTENSION_COMMAND, statusText);
     }
   }
 
@@ -27,63 +28,150 @@ export default function extensionTemplate(pi: ExtensionAPI) {
   pi.on("session_fork", (_event, ctx) => syncState(ctx));
 
   pi.registerCommand(EXTENSION_COMMAND, {
-    description: "Starter command for your extension",
+    description: "Run verification checks (typecheck, test, lint, format)",
     getArgumentCompletions: (prefix) => {
-      const options = ["status", "set-label", "help"];
+      const options = ["all", "test", "lint", "quick", "help"];
       const safePrefix = prefix.toLowerCase();
       const matches = options.filter((option) => option.startsWith(safePrefix));
       return matches.length > 0 ? matches.map((value) => ({ value, label: value })) : null;
     },
-    handler: (args, ctx): Promise<void> => {
-      const { name, rest } = parseSubcommand(args);
+    handler: async (args, ctx): Promise<void> => {
+      const { name } = parseSubcommand(args);
+      const cwd = process.cwd();
 
       switch (name) {
-        case "status":
-          notify(ctx, `Label: ${state.label}`);
-          return Promise.resolve();
-
-        case "set-label": {
-          if (!rest) {
-            notify(ctx, buildHelpText());
-            return Promise.resolve();
+        case "all":
+        case "test":
+        case "lint":
+        case "quick": {
+          notify(ctx, `Running verification: ${name}...`);
+          try {
+            const result = await runVerification(name, cwd);
+            state = updateStateWithResult(state, name, result);
+            pi.appendEntry(STATE_ENTRY_TYPE, state);
+            if (ctx.hasUI) {
+              ctx.ui.setStatus(EXTENSION_COMMAND, buildStatusText(state));
+            }
+            notify(ctx, formatResultForDisplay(result));
+          } catch (error) {
+            notify(
+              ctx,
+              `Verification failed: ${error instanceof Error ? error.message : String(error)}`
+            );
           }
-          state = { label: rest };
-          pi.appendEntry(STATE_ENTRY_TYPE, state);
-          if (ctx.hasUI) {
-            ctx.ui.setStatus(EXTENSION_COMMAND, `${EXTENSION_NAME}: ${state.label}`);
-          }
-          notify(ctx, `Label updated to: ${state.label}`);
-          return Promise.resolve();
+          return;
         }
 
+        case "help":
         default:
           notify(ctx, buildHelpText());
-          return Promise.resolve();
+          return;
       }
     },
   });
 
   pi.registerTool({
     name: TOOL_NAME,
-    label: "Echo",
-    description: "Echo text back to the model. Safe default tool for template projects.",
+    label: "Verify",
+    description: "Run verification checks and return structured pass/fail results",
     parameters: Type.Object({
-      message: Type.String({ description: "Text to echo back" }),
-      uppercase: Type.Optional(Type.Boolean({ description: "Return the message in upper case" })),
+      scope: Type.String({
+        enum: ["all", "test", "lint", "quick"],
+        default: "quick",
+        description: "Which checks to run",
+      }),
     }),
-    execute(_toolCallId, params) {
-      const text = buildEchoText(params);
-      return Promise.resolve({
-        content: [{ type: "text", text }],
-        details: { length: text.length },
-      });
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      const cwd = process.cwd();
+      const input = params as VerifyInput;
+      try {
+        const result = await runVerification(input.scope, cwd);
+        const statusText = result.success
+          ? "✓ All checks passed"
+          : `✗ ${result.summary.failed} check(s) failed`;
+        // Update state with last result
+        const newState: ExtensionState = {
+          label: state.label,
+          lastResult: {
+            scope: input.scope,
+            success: result.success,
+            timestamp: new Date().toISOString(),
+            summary: statusText,
+          },
+        };
+        state = newState;
+        pi.appendEntry(STATE_ENTRY_TYPE, state);
+        if (ctx.hasUI) {
+          const indicator = result.success ? "✓" : "✗";
+          ctx.ui.setStatus(EXTENSION_COMMAND, `${EXTENSION_NAME}: ${indicator} ${statusText}`);
+        }
+
+        return {
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+          details: result,
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorResult = {
+          success: false,
+          checks: [] as CheckResult[],
+          summary: { passed: 0, failed: 0, duration: 0 },
+          error: errorMessage,
+        };
+        return {
+          content: [{ type: "text", text: JSON.stringify(errorResult) }],
+          details: errorResult,
+        };
+      }
     },
   });
+
+  function buildStatusText(s: ExtensionState): string {
+    if (s.lastResult) {
+      const indicator = s.lastResult.success ? "✓" : "✗";
+      return `${EXTENSION_NAME}: ${indicator} ${s.lastResult.summary}`;
+    }
+    return `${EXTENSION_NAME}: ${s.label}`;
+  }
+
+  function updateStateWithResult(
+    s: ExtensionState,
+    scope: string,
+    result: VerifyResult
+  ): ExtensionState {
+    return {
+      ...s,
+      lastResult: {
+        scope,
+        success: result.success,
+        timestamp: new Date().toISOString(),
+        summary: `${result.summary.passed}/${result.summary.passed + result.summary.failed} checks passed`,
+      },
+    };
+  }
+
+  function formatResultForDisplay(result: VerifyResult): string {
+    const lines: string[] = [];
+    const indicator = result.success ? "✓" : "✗";
+    lines.push(
+      `${indicator} ${result.summary.passed} passed, ${result.summary.failed} failed (${result.summary.duration}ms)`
+    );
+
+    for (const check of result.checks) {
+      const checkIndicator = check.success ? "✓" : "✗";
+      lines.push(`  ${checkIndicator} ${check.type} (${check.duration}ms)`);
+      if (!check.success && check.error) {
+        lines.push(`    Error: ${check.error}`);
+      }
+    }
+
+    return lines.join("\n");
+  }
 }
 
 /** Notify via TUI when available, otherwise console. */
 function notify(
-  ctx: { hasUI: boolean; ui: { notify: (message: string, level: "info") => void } },
+  ctx: { hasUI: boolean; ui: { notify: (message: string, level: "info" | "error") => void } },
   message: string
 ): void {
   if (ctx.hasUI) {

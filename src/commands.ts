@@ -1,10 +1,12 @@
-import { EXTENSION_COMMAND } from "./constants.js";
+// Command parsing utilities for verify command
 
 export function buildHelpText(): string {
   return [
-    `/${EXTENSION_COMMAND} status`,
-    `/${EXTENSION_COMMAND} set-label <text>`,
-    `/${EXTENSION_COMMAND} help`,
+    `/verify all     - Run all checks (typecheck, test, lint, format)`,
+    `/verify test    - Run tests only`,
+    `/verify lint    - Run lint and format checks`,
+    `/verify quick   - Run typecheck and lint only (fast)`,
+    `/verify help    - Show this help`,
   ].join("\n");
 }
 

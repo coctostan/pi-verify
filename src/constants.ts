@@ -1,7 +1,7 @@
-export const EXTENSION_NAME = "my-pi-extension";
-export const EXTENSION_COMMAND = "myext";
-export const TOOL_NAME = "myext_echo";
-export const STATE_ENTRY_TYPE = "myext:state";
+export const EXTENSION_NAME = "pi-verify";
+export const EXTENSION_COMMAND = "verify";
+export const TOOL_NAME = "verify_check";
+export const STATE_ENTRY_TYPE = "verify:state";
 
-export const DEFAULT_LABEL = "Template ready";
+export const DEFAULT_LABEL = "Ready";
 export const MAX_MESSAGE_LENGTH = 500;

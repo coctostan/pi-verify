@@ -1,15 +1,21 @@
-import type { EchoInput } from "./types.js";
-import { MAX_MESSAGE_LENGTH } from "./constants.js";
+import type { VerifyInput } from "./types.js";
+import { runVerification } from "./verify.js";
 
-export function sanitizeMessage(message: string): string {
-  if (message.length <= MAX_MESSAGE_LENGTH) {
-    return message;
-  }
+export async function executeVerifyCheck(
+  input: VerifyInput,
+  cwd: string
+): Promise<{
+  content: { type: "text"; text: string }[];
+  details: unknown;
+}> {
+  const result = await runVerification(input.scope, cwd);
 
-  return `${message.slice(0, MAX_MESSAGE_LENGTH - 1)}…`;
-}
+  const text = result.success
+    ? `✓ Verification passed (${result.summary.passed}/${result.checks.length} checks)`
+    : `✗ Verification failed (${result.summary.failed}/${result.checks.length} checks failed)`;
 
-export function buildEchoText(input: EchoInput): string {
-  const sanitized = sanitizeMessage(input.message.trim());
-  return input.uppercase ? sanitized.toUpperCase() : sanitized;
+  return {
+    content: [{ type: "text", text }],
+    details: result,
+  };
 }
