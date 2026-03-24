@@ -14,7 +14,7 @@ Phases: 1 of 1 complete
 
 **v0.2 Test Runner Improvements** (v0.2.0)
 Status: 🚧 In Progress
-Phases: 0 of 3 complete
+Phases: 1 of 3 complete
 
 Theme: Improve test output formatting, add watch mode detection, and better error summarization for the verify command
 
@@ -23,7 +23,7 @@ Theme: Improve test output formatting, add watch mode detection, and better erro
 | Phase | Name                   | Plans | Status      | Completed  |
 | ----- | ---------------------- | ----- | ----------- | ---------- |
 | 1     | Core Verify Command    | 01-01 | Complete    | 2026-03-24 |
-| 2     | Test Output Formatting | 02-01 | Planning    | -          |
+| 2 | Test Output Formatting | 02-01 | Complete | 2026-03-24 |
 | 3     | Watch Mode Support     | TBD   | Not started | -          |
 | 4     | Error Summarization    | TBD   | Not started | -          |
 
