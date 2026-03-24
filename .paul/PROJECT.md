@@ -15,7 +15,7 @@ feedback instead of requiring individual command execution and raw output parsin
 
 | Attribute    | Value      |
 | ------------ | ---------- |
-| Version      | 0.2.0      |
+| Version      | 0.3.0      |
 | Status       | Shipped    |
 | Last Updated | 2026-03-24 |
 
@@ -73,14 +73,15 @@ anything.
 
 ## Key Decisions
 
-| Decision                                                          | Rationale                                                                | Date       | Status |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------- | ------ |
+| Decision                                                         | Rationale                                                                | Date       | Status |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------- | ------ |
 | Layered artifact model (`PROJECT.md` + `PRD.md`) adopted at init | Keep hot-path context concise while preserving deeper product definition | 2026-03-24 | Active |
-| Structured JSON output for all verification results               | Model can parse without regex                                            | 2026-03-24 | Active |
-| Progress callbacks in runCheck for real-time status               | Better UX during long-running tests                                      | 2026-03-24 | Active |
-| chalk for colored terminal output                                 | Better visual feedback; installed in Phase 3, used in Phase 4           | 2026-03-24 | Active |
-| Top-level chalk import (not dynamic)                              | ESLint no-restricted-syntax rule forbids dynamic imports                 | 2026-03-24 | Active |
-| Error categorization is best-effort pattern matching              | Cannot guarantee parsing all tool output formats                         | 2026-03-24 | Active |
+| Structured JSON output for all verification results              | Model can parse without regex                                            | 2026-03-24 | Active |
+| Progress callbacks in runCheck for real-time status              | Better UX during long-running tests                                      | 2026-03-24 | Active |
+| chalk for colored terminal output                                | Better visual feedback; installed in Phase 3, used in Phase 4            | 2026-03-24 | Active |
+| Top-level chalk import (not dynamic)                             | ESLint no-restricted-syntax rule forbids dynamic imports                 | 2026-03-24 | Active |
+| Error categorization is best-effort pattern matching             | Cannot guarantee parsing all tool output formats                         | 2026-03-24 | Active |
+| TODD post-task hook confirmed as enforcement gate                | Adversarial test proved regression blocking fires before commit          | 2026-03-24 | Active |
 
 ## Links
 
@@ -89,4 +90,4 @@ anything.
 
 ---
 
-_Last updated: 2026-03-24 after Phase 4 (v0.2 complete)_
+_Last updated: 2026-03-24 after Phase 5 (v0.3 complete)_
