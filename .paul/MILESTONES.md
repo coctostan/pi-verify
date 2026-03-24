@@ -160,9 +160,53 @@ STEP 2 (Enforcement p100):
 
 ---
 
+## v0.7 Hardened Module Retest
+
+**Version:** v0.7.0  
+**Status:** ✅ Complete  
+**Phases:** 1 of 1  
+**Completed:** 2026-03-24
+
+### Summary
+
+Hardened retest of two-step dispatch with all 5 advisory triggers — validates
+IRIS/RUBY/DOCS/SKIP run first with upgraded output, then WALT enforcement block.
+
+### Phases
+
+| Phase | Name | Status |
+|-------|------|--------|
+| 9 | Full Retest | ✅ Complete |
+
+### All 5 Triggers Verified
+
+| Trigger | Target | Module | Status |
+|---------|--------|--------|--------|
+| Complex function (6 params, 60 lines, magic 42) | verify.ts | IRIS + RUBY | ✅ Detected |
+| Unused import | index.ts | WALT | ✅ Blocked → Fixed |
+| Doc drift (README/CHANGELOG) | tool.ts | DOCS | ✅ Logged |
+| Decision | STATE.md | SKIP | ✅ Extracted |
+| Fake API key | constants.ts | IRIS | ✅ Pattern detected |
+
+### Hardened Two-Step Dispatch Confirmed
+
+```
+STEP 1 (Advisory p200-p300) — UPGRADED OUTPUT:
+  IRIS ✓  5 detections
+  RUBY ✓  4 flags (3 HIGH)
+  DOCS ✓  2 drift warnings
+  SKIP ✓  1 decision
+
+STEP 2 (Enforcement p100):
+  TODD ✓  26/26 passing
+  WALT ⚠️  BLOCK (with context) → Fix → Pass
+```
+
+---
+
 ## Current: Next Milestone
 
-**Version:** v0.7.0 (planned)  
+**Version:** v0.8.0 (planned)  
 **Status:** 🚧 Planning  
 **Theme:** Multi-language support (Rust/Python/Go)
 
