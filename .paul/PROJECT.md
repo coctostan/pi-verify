@@ -2,25 +2,30 @@
 
 ## Description
 
-A Pi extension that auto-detects project type and runs verification checks (typecheck, lint, test, build). Provides /verify command with subcommands: all, test, lint, quick. Shows results in status bar.
+A Pi extension that auto-detects project type and runs verification checks (typecheck, lint,
+test, build). Provides /verify command with subcommands: all, test, lint, quick. Shows results
+in status bar with structured, colored output.
 
 ## Core Value
 
-Saves AI coding agents tokens and time by providing unified, structured pass/fail verification feedback instead of requiring individual command execution and raw output parsing.
+Saves AI coding agents tokens and time by providing unified, structured pass/fail verification
+feedback instead of requiring individual command execution and raw output parsing.
 
 ## Current State
 
-| Attribute    | Value                  |
-| ------------ | ---------------------- |
-| Version      | 0.1.0                  |
-| Status       | Discovery / Onboarding |
-| Last Updated | 2026-03-24             |
+| Attribute    | Value      |
+| ------------ | ---------- |
+| Version      | 0.2.0      |
+| Status       | Shipped    |
+| Last Updated | 2026-03-24 |
 
 **Current system summary:**
 
-- New project based on ayagmar/pi-extension-template
-- Existing TypeScript codebase with src/ directory containing commands.ts, constants.ts, index.ts, tool.ts, types.ts
-- Node.js project with package.json, ESLint, Prettier configured
+- TypeScript extension with full verify pipeline: typecheck, test, lint, format
+- Structured JSON output with parsed test results (Jest/Vitest/node:test)
+- Watch mode detection for Jest and Vitest
+- Error aggregation, categorization, and chalk-colored output
+- `verify_check` tool returns structured `errorSummary` with actionable suggestions
 
 ## Scope Snapshot
 
@@ -28,7 +33,10 @@ Saves AI coding agents tokens and time by providing unified, structured pass/fai
 
 - /verify command with all/test/lint/quick subcommands
 - Node.js project detection (package.json)
-- Structured pass/fail output
+- Structured pass/fail output with parsed test results
+- Progress callbacks for real-time status updates
+- Watch mode detection (Jest, Vitest)
+- Error summarization with categories and fix suggestions
 - verify_check tool for model-callable use
 
 ### Planned
@@ -43,10 +51,12 @@ Saves AI coding agents tokens and time by providing unified, structured pass/fai
 
 ## Target Users
 
-**Primary:** AI coding agents using Pi who need fast feedback on whether their changes broke anything.
+**Primary:** AI coding agents using Pi who need fast feedback on whether their changes broke
+anything.
 
 - Need: Reduce the edit-check-fix loop
-- Success: Run /verify all and get structured pass/fail without parsing raw command output
+- Success: Run /verify all and get structured pass/fail with categorized errors and fix
+  suggestions without parsing raw command output
 
 ## Constraints
 
@@ -59,12 +69,18 @@ Saves AI coding agents tokens and time by providing unified, structured pass/fai
 ## Success Metrics
 
 - Agent can run `/verify all` and get structured pass/fail without parsing raw command output
+- Failing checks surface categorized errors with actionable fix suggestions
 
 ## Key Decisions
 
-| Decision                                                         | Rationale                                                                | Date       | Status |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------- | ------ |
+| Decision                                                          | Rationale                                                                | Date       | Status |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------- | ------ |
 | Layered artifact model (`PROJECT.md` + `PRD.md`) adopted at init | Keep hot-path context concise while preserving deeper product definition | 2026-03-24 | Active |
+| Structured JSON output for all verification results               | Model can parse without regex                                            | 2026-03-24 | Active |
+| Progress callbacks in runCheck for real-time status               | Better UX during long-running tests                                      | 2026-03-24 | Active |
+| chalk for colored terminal output                                 | Better visual feedback; installed in Phase 3, used in Phase 4           | 2026-03-24 | Active |
+| Top-level chalk import (not dynamic)                              | ESLint no-restricted-syntax rule forbids dynamic imports                 | 2026-03-24 | Active |
+| Error categorization is best-effort pattern matching              | Cannot guarantee parsing all tool output formats                         | 2026-03-24 | Active |
 
 ## Links
 
@@ -73,4 +89,4 @@ Saves AI coding agents tokens and time by providing unified, structured pass/fai
 
 ---
 
-_Created: 2026-03-24_
+_Last updated: 2026-03-24 after Phase 4 (v0.2 complete)_
