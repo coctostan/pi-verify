@@ -23,7 +23,7 @@ Theme: Improve test output formatting, add watch mode detection, and better erro
 | Phase | Name                 | Plans | Status       | Completed |
 | ----- | -------------------- | ----- | ------------ | --------- |
 | 1     | Core Verify Command  | 01-01 | Complete     | 2026-03-24 |
-| 2     | Test Output Formatting | TBD | Not started  | -         |
+| 2 | Test Output Formatting | 02-01 | Planning | - |
 | 3     | Watch Mode Support   | TBD   | Not started  | -         |
 | 4     | Error Summarization  | TBD   | Not started  | -         |
 
