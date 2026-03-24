@@ -20,12 +20,12 @@ Theme: Improve test output formatting, add watch mode detection, and better erro
 
 ## Phases
 
-| Phase | Name                   | Plans | Status      | Completed  |
-| ----- | ---------------------- | ----- | ----------- | ---------- |
-| 1     | Core Verify Command    | 01-01 | Complete    | 2026-03-24 |
-| 2     | Test Output Formatting | 02-01 | Complete    | 2026-03-24 |
-| 3     | Watch Mode Support     | 03-01 | Complete    | 2026-03-24 |
-| 4     | Error Summarization    | TBD   | Not started | -          |
+| Phase | Name                   | Plans | Status   | Completed  |
+| ----- | ---------------------- | ----- | -------- | ---------- |
+| 1     | Core Verify Command    | 01-01 | Complete | 2026-03-24 |
+| 2     | Test Output Formatting | 02-01 | Complete | 2026-03-24 |
+| 3     | Watch Mode Support     | 03-01 | Complete | 2026-03-24 |
+| 4     | Error Summarization    | 04-01 | Planning | -          |
 
 ## Phase Details
 

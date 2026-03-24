@@ -40,6 +40,28 @@ export async function executeVerifyCheck(
   for (const check of result.checks) {
     lines.push(formatCheckResult(check));
   }
+  // Include error summary in formatted output if present
+  if (result.errorSummary) {
+    lines.push("");
+    lines.push("Error Summary:");
+    lines.push(`  Total: ${result.errorSummary.total} error(s)`);
+    for (const [category, count] of Object.entries(result.errorSummary.byCategory)) {
+      if (count > 0) {
+        lines.push(`  ${category}: ${count}`);
+      }
+    }
+    for (const error of result.errorSummary.errors) {
+      lines.push("");
+      lines.push(`  [${error.category}] ${error.message}`);
+      if (error.file) {
+        lines.push(`    at ${error.file}${error.line ? `:${error.line}` : ""}`);
+      }
+      if (error.suggestion) {
+        lines.push(`    💡 ${error.suggestion}`);
+      }
+    }
+  }
+
   return {
     content: [{ type: "text", text: lines.join("\n") }],
     details: result,
