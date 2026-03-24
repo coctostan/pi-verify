@@ -11,10 +11,11 @@ verification feedback instead of requiring individual command execution and raw 
 
 ## Current Position
 
-Milestone: **COMPLETE** — v0.4 Deep Module Audit ✓
-Phase: All 6 phases complete
-Status: Milestone finalized — ready for v0.5
-Last activity: 2026-03-24 — v0.4 validated and merged
+Milestone: v0.6 Two-Step Dispatch Test
+Phase: 8 of 8 (Two-Step Dispatch Test)
+Plan: 08-01 complete
+Status: Phase complete — ready for transition
+Last activity: 2026-03-24 — Two-step dispatch semantics confirmed
 
 Progress:
 
@@ -22,6 +23,8 @@ Progress:
 - v0.2 Test Runner Improvements: [████████████████████] 100% ✓
 - v0.3 Module Audit: [████████████████████] 100% ✓
 - v0.4 Deep Module Audit: [████████████████████] 100% ✓
+- v0.5 Module Stress Test: [░░░░░░░░░░░░░░░░░░░░] CANCELED (stop-on-block confirmed)
+- v0.6 Two-Step Dispatch Test: [████████████████████] 100% ✓
 
 ## Loop Position
 
@@ -29,7 +32,7 @@ Current loop state:
 
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Milestone complete — v0.4 shipped]
+  ✓        ✓        ✓     [Loop complete — Phase 8 done]
 ```
 
 ## Accumulated Context
@@ -48,6 +51,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 | 2026-03-24 | Top-level chalk import (not dynamic)                              | Phase 4 | Satisfies ESLint no-restricted-syntax rule  |
 | 2026-03-24 | TODD post-task hook blocked adversarial `detectProjectType` break | Phase 5 | Confirms module enforcement fires correctly |
 | 2026-03-24 | All 6 PALS modules validated in single APPLY cycle                | Phase 6 | RUBY, IRIS, SKIP, DOCS, WALT, TODD all work |
+| 2026-03-24 | Adopted two-step dispatch for better module observability         | Phase 8 | Tests advisory→enforcement ordering         |
 
 ### Fixes
 
@@ -76,6 +80,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: v0.4 milestone complete — all 4 milestones shipped
-Next action: Create v0.5 milestone or pause here
-Resume file: .paul/MILESTONES.md
+Stopped at: Phase 8 complete — two-step dispatch confirmed working
+Next action: Transition phase to complete v0.6 milestone
+Resume file: .paul/phases/08-two-step-dispatch-test/08-01-SUMMARY.md
