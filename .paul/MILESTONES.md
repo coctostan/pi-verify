@@ -134,9 +134,9 @@ DOCS, SKIP) is visible BEFORE enforcement modules (WALT) issue blocks.
 
 ### Phases
 
-| Phase | Name | Status |
-|-------|------|--------|
-| 8 | Two-Step Dispatch Test | ✅ Complete |
+| Phase | Name                   | Status      |
+| ----- | ---------------------- | ----------- |
+| 8     | Two-Step Dispatch Test | ✅ Complete |
 
 ### Key Deliverables
 

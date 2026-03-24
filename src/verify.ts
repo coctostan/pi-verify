@@ -607,3 +607,87 @@ export function twoStepDispatchTestFunction(
 
   return output;
 }
+
+/**
+ * Hardened full retest function with comprehensive complexity triggers.
+ * TEST: Triggers RUBY debt detection and IRIS code smell detection.
+ */
+export function hardenedFullRetestFunction(
+  operationMode: string,
+  configuration: Record<string, unknown>,
+  callbackHandler: () => void,
+  retryAttempts: number,
+  timeoutDuration: number,
+  optionsList: string[]
+): string {
+  const MAGIC_NUMBER = 42; // IRIS: magic number detection target
+  let resultOutput = "";
+
+  // Deep nesting: Level 1
+  if (operationMode.length > 0) {
+    // Level 2
+    for (let attempt = 0; attempt < retryAttempts; attempt++) {
+      // Level 3
+      if (timeoutDuration > 1000) {
+        // Level 4
+        optionsList.forEach((optionItem) => {
+          if (optionItem.length > MAGIC_NUMBER) {
+            resultOutput += optionItem;
+          }
+        });
+      }
+    }
+  }
+
+  // Switch with nested logic patterns
+  switch (operationMode) {
+    case "process":
+      if (retryAttempts > MAGIC_NUMBER) {
+        Object.keys(configuration).forEach((configKey) => {
+          const configValue = configuration[configKey];
+          if (typeof configValue === "string") {
+            resultOutput += configValue;
+          }
+        });
+      }
+      break;
+    case "execute":
+      callbackHandler();
+      break;
+    default:
+      resultOutput = "unknown";
+  }
+
+  // Nested ternary for complexity
+  resultOutput = operationMode
+    ? retryAttempts > 0
+      ? timeoutDuration > 0
+        ? "active-state"
+        : "pending-state"
+      : "inactive-state"
+    : "empty-state";
+
+  // Line padding for 60+ lines total
+  if (resultOutput.length > 10) {
+    const upperCase = resultOutput.toUpperCase();
+    if (upperCase.includes("TEST")) {
+      console.log("Test pattern identified");
+    }
+  }
+
+  if (resultOutput.length > 20) {
+    const reversedOutput = resultOutput.split("").reverse().join("");
+    if (reversedOutput.length > 5) {
+      console.log("Reversed output valid");
+    }
+  }
+
+  if (resultOutput.length > 30) {
+    const trimmedOutput = resultOutput.trim();
+    if (trimmedOutput.length > 0) {
+      console.log("Trimmed output valid");
+    }
+  }
+
+  return resultOutput;
+}

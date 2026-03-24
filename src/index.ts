@@ -1,4 +1,5 @@
 import { Type } from "@sinclair/typebox";
+// import { existsSync } from "fs"; // Fixed: removed unused import
 // import { writeFileSync } from "fs"; // Fixed: removed unused import
 import chalk from "chalk";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";

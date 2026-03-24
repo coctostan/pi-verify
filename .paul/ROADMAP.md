@@ -56,9 +56,27 @@ IRIS/RUBY/DOCS/SKIP output is visible before WALT block enforcement.
 
 ## Current Milestone
 
-**Next: v0.7 Multi-language Support** (v0.7.0)
-Status: 🚧 Planning
-Phases: Not started
+**v0.7 Hardened Module Retest** (v0.7.0)
+Status: 🚧 In Progress
+Phases: 0 of 1 complete
+
+Theme: Hardened retest of two-step dispatch with upgraded advisory output — validate
+IRIS/RUBY/DOCS/SKIP run first with enhanced visibility, then WALT enforcement block.
+
+## Phases
+
+| Phase | Name                        | Plans | Status      | Completed  |
+| ----- | --------------------------- | ----- | ----------- | ---------- |
+| 1     | Core Verify Command         | 01-01 | Complete    | 2026-03-24 |
+| 2     | Test Output Formatting      | 02-01 | Complete    | 2026-03-24 |
+| 3     | Watch Mode Support          | 03-01 | Complete    | 2026-03-24 |
+| 4     | Error Summarization         | 04-01 | Complete    | 2026-03-24 |
+| 5     | Adversarial Testing         | 05-01 | Complete    | 2026-03-24 |
+| 6     | Advisory Module Stress Test | 06-01 | Complete    | 2026-03-24 |
+| 8     | Two-Step Dispatch Test      | 08-01 | Complete    | 2026-03-24 |
+| 9     | Full Retest                 | TBD   | Not started | -          |
+
+Note: Phase 7 reserved for future use.
 
 Theme: Test explicit two-step dispatch (advisory collection → enforcement) to ensure
 IRIS/RUBY/DOCS/SKIP output is visible before WALT block enforcement.
@@ -100,4 +118,4 @@ Plans: TBD (defined during /paul:plan)
 
 ---
 
-_Roadmap updated: 2026-03-24 — v0.6 Two-Step Dispatch Test complete_
+_Roadmap updated: 2026-03-24 — v0.7 Hardened Module Retest started_
