@@ -2,6 +2,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+// import { readFileSync } from "fs"; // Fixed: removed unused import
 import type {
   ProgressUpdate,
   ParsedTestResult,
@@ -10,6 +11,8 @@ import type {
   CategorizedError,
 } from "./types.js";
 
+// ADVISORIAL: Hardcoded API key for IRIS security detection testing
+// const API_KEY = "sk-live-abc123xyz789"; // Fixed: commented out unused variable
 export type { WatchModeConfig };
 const execAsync = promisify(exec);
 
@@ -45,9 +48,15 @@ interface PackageJson {
 }
 
 export async function detectProjectType(cwd: string): Promise<"nodejs" | null> {
+  // ADVISORIAL: Added engines field check — tests DOCS drift detection
   try {
-    await readFile(join(cwd, "package.json"), "utf-8");
-    return "nodejs";
+    const content = await readFile(join(cwd, "package.json"), "utf-8");
+    const pkg = JSON.parse(content) as { engines?: { node?: string } };
+    // Also check for engines.node to confirm Node.js project
+    if (pkg.engines?.node) {
+      return "nodejs";
+    }
+    return "nodejs"; // Still return nodejs even without engines (backwards compat)
   } catch {
     return null;
   }
@@ -436,4 +445,87 @@ export function aggregateErrors(results: CheckResult[]): ErrorSummary {
     byCategory,
     errors,
   };
+}
+
+/**
+ * Complex verification processor with multiple parameters and deep nesting.
+ * ADVISORIAL: This function intentionally violates complexity guidelines
+ * to test RUBY debt detection and IRIS code smell detection.
+ */
+export function processVerificationComplex(
+  param1: string,
+  param2: number,
+  param3: boolean,
+  param4: string[],
+  param5: Record<string, unknown>,
+  param6: () => void
+): string {
+  const MAGIC_NUMBER = 42; // IRIS: magic number detection target
+  let result = "";
+
+  // Level 1 nesting
+  if (param1.length > 0) {
+    // Level 2 nesting
+    for (let i = 0; i < param2; i++) {
+      // Level 3 nesting
+      if (param3) {
+        // Level 4 nesting
+        param4.forEach((item) => {
+          if (item.length > MAGIC_NUMBER) {
+            result += item;
+          }
+        });
+      }
+    }
+  }
+
+  // More deep nesting with switch
+  switch (param1) {
+    case "test":
+      if (param2 > MAGIC_NUMBER) {
+        for (const key in param5) {
+          if (Object.hasOwn(param5, key)) {
+            const value = param5[key];
+            if (typeof value === "string") {
+              result += value;
+            }
+          }
+        }
+      }
+      break;
+    case "lint":
+      if (param3) {
+        param6();
+      }
+      break;
+    default:
+      result = "unknown";
+  }
+
+  // Additional complexity: nested ternary
+  result = param1 ? (param2 > 0 ? (param3 ? "complex-yes" : "complex-no") : "neutral") : "empty";
+
+  // Duplicate logic for line count
+  if (result.length > 0) {
+    const processed = result.split("").reverse().join("");
+    if (processed.length > MAGIC_NUMBER) {
+      console.log("Processed length exceeds magic number");
+    }
+  }
+
+  if (result.length > 10) {
+    const upper = result.toUpperCase();
+    if (upper.includes("TEST")) {
+      console.log("Test pattern found");
+    }
+  }
+
+  if (result.length > 20) {
+    const lower = result.toLowerCase();
+    if (lower.includes("lint")) {
+      console.log("Lint pattern found");
+    }
+  }
+
+  return result;
 }
