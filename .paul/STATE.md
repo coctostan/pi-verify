@@ -57,11 +57,14 @@ PLAN ──▶ APPLY ──▶ UNIFY
 None.
 
 ## Session Continuity
-
-Last session: 2026-03-24
-Stopped at: Plan 02-01 created for Phase 2
-Next action: Review and approve plan, then run /paul:apply .paul/phases/02-test-output-formatting/02-01-PLAN.md
-Resume file: .paul/phases/02-test-output-formatting/02-01-PLAN.md
+Stopped at: Session paused — plan created, awaiting approval
+Next action: Resume from handoff and review/approve plan
+Resume file: .paul/HANDOFF-2026-03-24.md
+Resume context:
+- Phase 2 plan (02-01) is complete and ready for review
+- Loop position: PLAN ✓, APPLY ○, UNIFY ○
+- Clean working tree on main branch
+- No blockers
 
 ---
 
