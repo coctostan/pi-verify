@@ -2,8 +2,9 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { ProgressUpdate, ParsedTestResult } from "./types.js";
+import type { ProgressUpdate, ParsedTestResult, WatchModeConfig } from "./types.js";
 
+export type { WatchModeConfig };
 const execAsync = promisify(exec);
 
 export type CheckType = "typecheck" | "test" | "lint" | "format" | "build";
@@ -255,4 +256,28 @@ export async function runVerification(
       duration,
     },
   };
+}
+
+/**
+ * Detects if watch mode flags are present in command arguments
+ * @param args - Array of command arguments to check
+ * @returns Object with enabled flag and detected watch flags
+ */
+export function detectWatchMode(args: string[]): { enabled: boolean; flags: string[] } {
+  const watchFlags = ["--watch", "--watchAll", "-w"];
+  const foundFlags = args.filter((arg) => watchFlags.includes(arg));
+  return {
+    enabled: foundFlags.length > 0,
+    flags: foundFlags,
+  };
+}
+
+/**
+ * Determines if a test framework supports watch mode
+ * @param config - Object containing the framework name
+ * @returns true if the framework supports watch mode
+ */
+export function supportsWatchMode(config: { framework: string }): boolean {
+  const supportedFrameworks = ["jest", "vitest"];
+  return supportedFrameworks.includes(config.framework.toLowerCase());
 }

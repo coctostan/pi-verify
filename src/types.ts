@@ -30,3 +30,12 @@ export interface ParsedTestResult {
     duration?: number;
   }[];
 }
+
+export interface WatchModeConfig {
+  framework: string;
+}
+
+export interface WatchModeResult {
+  enabled: boolean;
+  flags: string[];
+}

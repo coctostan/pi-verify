@@ -1,4 +1,4 @@
-# Pi Extension Template
+# pi-verify
 
 A practical starter for building Pi extensions that are easy to ship, test, and maintain.
 
@@ -147,6 +147,43 @@ pnpm run lint
 pnpm run format:check
 pnpm run check
 ```
+
+## Watch Mode Support
+
+The verify extension can detect and handle watch mode for supported test runners:
+
+### Supported Frameworks
+
+| Framework | Watch Mode Support                   |
+| --------- | ------------------------------------ |
+| Jest      | ✓ Full support (--watch, --watchAll) |
+| Vitest    | ✓ Full support (--watch, -w)         |
+| node:test | ✗ Not supported                      |
+
+### Detecting Watch Mode
+
+The extension automatically detects watch mode flags in test commands:
+
+```bash
+# These will trigger watch mode detection
+npm test -- --watch
+npm test -- --watchAll
+vitest --watch
+```
+
+When watch mode is detected:
+
+- The verification runner acknowledges the watch mode
+- Status bar shows "verify: watching..." during execution
+- Long-running processes are handled with proper timeouts
+
+### Colored Output
+
+The extension uses `chalk` for colored terminal output:
+
+- ✓ Green for passing checks
+- ✗ Red for failing checks
+- ⏳ Yellow for warnings/watch mode status
 
 ## Testing notes
 
