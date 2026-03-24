@@ -2,6 +2,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { ProgressUpdate, ParsedTestResult } from "./types.js";
 
 const execAsync = promisify(exec);
 
@@ -13,6 +14,7 @@ export interface CheckResult {
   duration: number;
   output?: string;
   error?: string;
+  parsedTestResult?: ParsedTestResult;
 }
 
 export interface VerifyResult {
@@ -59,57 +61,129 @@ export function getCheckCommand(check: CheckType, scripts: Record<string, string
     }
   }
 
-  // Fallback commands if no script found
   const fallbackMap: Record<CheckType, string | null> = {
     typecheck: "npx tsc --noEmit",
-    test: null, // No reliable fallback
+    test: null,
     lint: "npx eslint .",
     format: "npx prettier --check .",
-    build: null, // No reliable fallback
+    build: null,
   };
 
   return fallbackMap[check];
 }
 
-export async function runCheck(type: CheckType, cwd: string): Promise<CheckResult> {
+export function parseTestOutput(output: string): ParsedTestResult | undefined {
+  const tests: ParsedTestResult["tests"] = [];
+  let passed = 0;
+  let failed = 0;
+  let skipped = 0;
+  let framework = "unknown";
+
+  const isJest = output.includes("PASS") || output.includes("FAIL");
+  const isVitest = output.includes("Test Files") || output.includes("Vitest");
+  const isNodeTest = output.includes("✔") || output.includes("✗") || output.includes("subtests:");
+
+  if (isJest) framework = "jest";
+  else if (isVitest) framework = "vitest";
+  else if (isNodeTest) framework = "node:test";
+
+  if (isJest) {
+    const testMatch = output.match(
+      /Tests:\s+(\d+)\s+passed(?:,\s+(\d+)\s+failed)?(?:,\s+(\d+)\s+skipped)?/
+    );
+    if (testMatch) {
+      passed = parseInt(testMatch[1] ?? "0", 10);
+      failed = parseInt(testMatch[2] ?? "0", 10);
+      skipped = parseInt(testMatch[3] ?? "0", 10);
+    }
+  }
+
+  if (isVitest) {
+    const passMatch = output.match(/(\d+)\s+passed/);
+    const failMatch = output.match(/(\d+)\s+failed/);
+    if (passMatch) passed = parseInt(passMatch[1] ?? "0", 10);
+    if (failMatch) failed = parseInt(failMatch[1] ?? "0", 10);
+  }
+
+  if (isNodeTest) {
+    const passMatch = output.match(/✔/g);
+    const failMatch = output.match(/✗/g);
+    if (passMatch) passed = passMatch.length;
+    if (failMatch) failed = failMatch.length;
+  }
+
+  const lines = output.split("\n");
+  for (const line of lines) {
+    const testMatch = line.match(/[✔✗]\s+(.+)/);
+    if (testMatch) {
+      tests.push({
+        name: testMatch[1]?.trim() ?? "",
+        status: line.includes("✔") ? "passed" : "failed",
+      });
+    }
+  }
+
+  if (passed === 0 && failed === 0 && tests.length === 0) {
+    return undefined;
+  }
+
+  return { framework, passed, failed, skipped, tests };
+}
+
+export async function runCheck(
+  type: CheckType,
+  cwd: string,
+  onProgress?: (update: ProgressUpdate) => void
+): Promise<CheckResult> {
   const startTime = Date.now();
+
+  onProgress?.({ type, status: "running", message: `Running ${type}...` });
 
   const projectType = await detectProjectType(cwd);
   if (projectType !== "nodejs") {
-    return {
+    const result: CheckResult = {
       type,
       success: false,
       duration: 0,
       error: "No Node.js project detected (package.json not found)",
     };
+    onProgress?.({ type, status: "complete", result });
+    return result;
   }
 
   const packageJson = await loadPackageJson(cwd);
   const command = getCheckCommand(type, packageJson.scripts ?? {});
 
   if (!command) {
-    return {
+    const result: CheckResult = {
       type,
       success: false,
       duration: 0,
       error: `No command available for ${type} check`,
     };
+    onProgress?.({ type, status: "complete", result });
+    return result;
   }
 
   try {
     const { stdout, stderr } = await execAsync(command, {
       cwd,
-      timeout: 300000, // 5 minute timeout
+      timeout: 300000,
     });
 
     const duration = Date.now() - startTime;
+    const output = stdout || stderr;
+    const parsedTestResult = type === "test" && output ? parseTestOutput(output) : undefined;
 
-    return {
+    const result: CheckResult = {
       type,
       success: true,
       duration,
-      ...(stdout || stderr ? { output: stdout || stderr } : {}),
+      ...(output ? { output } : {}),
+      ...(parsedTestResult ? { parsedTestResult } : {}),
     };
+    onProgress?.({ type, status: "complete", result });
+    return result;
   } catch (error) {
     const duration = Date.now() - startTime;
 
@@ -125,12 +199,17 @@ export async function runCheck(type: CheckType, cwd: string): Promise<CheckResul
       errorOutput = String(error);
     }
 
-    return {
+    const parsedTestResult = type === "test" ? parseTestOutput(errorOutput) : undefined;
+
+    const result: CheckResult = {
       type,
       success: false,
       duration,
       output: errorOutput,
+      ...(parsedTestResult ? { parsedTestResult } : {}),
     };
+    onProgress?.({ type, status: "complete", result });
+    return result;
   }
 }
 
@@ -143,14 +222,15 @@ const scopeToChecks: Record<"all" | "test" | "lint" | "quick", CheckType[]> = {
 
 export async function runVerification(
   scope: "all" | "test" | "lint" | "quick",
-  cwd: string
+  cwd: string,
+  onProgress?: (update: ProgressUpdate) => void
 ): Promise<VerifyResult> {
   const startTime = Date.now();
   const checksToRun = scopeToChecks[scope];
   const results: CheckResult[] = [];
 
   for (const checkType of checksToRun) {
-    const result = await runCheck(checkType, cwd);
+    const result = await runCheck(checkType, cwd, onProgress);
     results.push(result);
   }
 
