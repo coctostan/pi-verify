@@ -16,28 +16,18 @@ Phases: 1 of 1 complete
 Status: Complete
 Phases: 4 of 4 complete
 
-Theme: Improve test output formatting, add watch mode detection, and better error summarization
-for the verify command
-
-## Completed Milestones
-
-**v0.1 Initial Release** (v0.1.0) ✓
-Status: Complete
-Phases: 1 of 1 complete
-
-**v0.2 Test Runner Improvements** (v0.2.0) ✓
-Status: Complete
-Phases: 4 of 4 complete
-
-Theme: Improve test output formatting, add watch mode detection, and better error summarization
-for the verify command
-
 **v0.3 Module Audit** (v0.3.0) ✓
 Status: Complete
 Phases: 1 of 1 complete
 
-Theme: Adversarial testing of PALS module enforcement — validate that TODD, WALT, and DEAN
-catch regressions and violations during apply.
+Theme: Adversarial testing of PALS module enforcement — validate TODD blocks regressions.
+
+**v0.4 Deep Module Audit** (v0.4.0) ✓
+Status: Complete
+Phases: 1 of 1 complete
+
+Theme: Comprehensive module stress test — validate all 6 PALS modules (TODD, WALT, DEAN,
+IRIS, RUBY, SKIP, DOCS).
 
 ## Completed Milestones
 
@@ -57,17 +47,21 @@ Phases: 1 of 1 complete
 Status: Complete
 Phases: 1 of 1 complete
 
-Theme: Comprehensive module stress test — validate RUBY, IRIS, SKIP, DOCS, and WALT
-enforcement in a single APPLY cycle.
+**v0.6 Two-Step Dispatch Test** (v0.6.0) ✓
+Status: Complete
+Phases: 1 of 1 complete
+
+Theme: Test explicit two-step dispatch (advisory collection → enforcement) to ensure
+IRIS/RUBY/DOCS/SKIP output is visible before WALT block enforcement.
 
 ## Current Milestone
 
-**Next: v0.5 Multi-language Support** (v0.5.0)
+**Next: v0.7 Multi-language Support** (v0.7.0)
 Status: 🚧 Planning
 Phases: Not started
 
-Theme: Comprehensive module stress test — validate RUBY, IRIS, SKIP, DOCS, and WALT
-enforcement in a single APPLY cycle.
+Theme: Test explicit two-step dispatch (advisory collection → enforcement) to ensure
+IRIS/RUBY/DOCS/SKIP output is visible before WALT block enforcement.
 
 ## Phases
 
@@ -79,6 +73,10 @@ enforcement in a single APPLY cycle.
 | 4     | Error Summarization         | 04-01 | Complete | 2026-03-24 |
 | 5     | Adversarial Testing         | 05-01 | Complete | 2026-03-24 |
 | 6     | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
+| 8     | Two-Step Dispatch Test      | 08-01 | Complete | 2026-03-24 |
+
+Note: Phase 7 was reserved for collect-then-block validation (aborted after confirming
+stop-on-block semantics).
 
 ## Phase Details
 
@@ -87,22 +85,19 @@ enforcement in a single APPLY cycle.
 Focus: Simultaneously trigger all module hooks — RUBY (debt), IRIS (smells/security),
 SKIP (decisions), DOCS (drift), WALT (lint) — to verify comprehensive PALS enforcement.
 
-Plans: TBD (defined during /paul:plan)
+### Phase 8: Two-Step Dispatch Test
 
-### Phase 5: Adversarial Testing
-
-Focus: Intentionally introduce a breaking change to `detectProjectType` (always returns
-`'unknown'`) to verify that TODD's post-task hook catches the test regression before APPLY
-completes.
+Focus: Test explicit two-step dispatch where advisory modules (IRIS, RUBY, DOCS, SKIP)
+run and output BEFORE enforcement modules (WALT) issue blocks.
 
 Plans: TBD (defined during /paul:plan)
 
 ## Future Milestones
 
-- v0.5: Multi-language support (Rust/Python/Go)
-- v0.6: Caching of check results
-- v0.7: Custom check configurations
+- v0.7: Multi-language support (Rust/Python/Go)
+- v0.8: Caching of check results
+- v0.9: Custom check configurations
 
 ---
 
-_Roadmap updated: 2026-03-24 — v0.4 Deep Module Audit complete_
+_Roadmap updated: 2026-03-24 — v0.6 Two-Step Dispatch Test complete_

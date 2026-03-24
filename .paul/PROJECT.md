@@ -15,7 +15,7 @@ feedback instead of requiring individual command execution and raw output parsin
 
 | Attribute    | Value      |
 | ------------ | ---------- |
-| Version      | 0.4.0      |
+| Version      | 0.6.0      |
 | Status       | Shipped    |
 | Last Updated | 2026-03-24 |
 
@@ -90,4 +90,4 @@ anything.
 
 ---
 
-_Last updated: 2026-03-24 after Phase 6 (v0.4 complete)_
+_Last updated: 2026-03-24 after Phase 8 (v0.6 complete)_

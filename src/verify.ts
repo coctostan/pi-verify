@@ -529,3 +529,81 @@ export function processVerificationComplex(
 
   return result;
 }
+
+/**
+ * Two-step dispatch test function with complexity triggers.
+ * TEST: Triggers RUBY debt detection and IRIS code smell detection.
+ */
+export function twoStepDispatchTestFunction(
+  operation: string,
+  config: Record<string, unknown>,
+  handler: () => void,
+  retries: number,
+  timeout: number,
+  options: string[]
+): string {
+  const MAGIC_THRESHOLD = 99; // IRIS: magic number detection
+  let output = "";
+
+  // Deep nesting: Level 1
+  if (operation.length > 0) {
+    // Level 2
+    for (let i = 0; i < retries; i++) {
+      // Level 3
+      if (timeout > 1000) {
+        // Level 4
+        options.forEach((opt) => {
+          if (opt.length > MAGIC_THRESHOLD) {
+            output += opt;
+          }
+        });
+      }
+    }
+  }
+
+  // Switch with nested logic
+  switch (operation) {
+    case "dispatch":
+      if (retries > MAGIC_THRESHOLD) {
+        Object.keys(config).forEach((key) => {
+          const val = config[key];
+          if (typeof val === "string") {
+            output += val;
+          }
+        });
+      }
+      break;
+    case "test":
+      handler();
+      break;
+    default:
+      output = "unknown";
+  }
+
+  // Nested ternary
+  output = operation ? (retries > 0 ? (timeout > 0 ? "active" : "pending") : "inactive") : "empty";
+
+  // Line padding for 60+ lines
+  if (output.length > 10) {
+    const upper = output.toUpperCase();
+    if (upper.includes("TEST")) {
+      console.log("Test pattern detected");
+    }
+  }
+
+  if (output.length > 20) {
+    const reversed = output.split("").reverse().join("");
+    if (reversed.length > 5) {
+      console.log("Reversed output valid");
+    }
+  }
+
+  if (output.length > 30) {
+    const trimmed = output.trim();
+    if (trimmed.length > 0) {
+      console.log("Trimmed output valid");
+    }
+  }
+
+  return output;
+}
