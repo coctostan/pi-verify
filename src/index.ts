@@ -46,18 +46,33 @@ export default function extensionTemplate(pi: ExtensionAPI) {
         case "quick": {
           notify(ctx, `Running verification: ${name}...`);
           try {
-            const result = await runVerification(name, cwd);
+            // Update status bar during execution
+            if (ctx.hasUI) {
+              ctx.ui.setStatus(EXTENSION_COMMAND, `${EXTENSION_NAME}: testing...`);
+            }
+
+            const result = await runVerification(name, cwd, (update) => {
+              if (update.status === "running" && ctx.hasUI) {
+                ctx.ui.setStatus(EXTENSION_COMMAND, `${EXTENSION_NAME}: ${update.message}`);
+              }
+            });
+
             state = updateStateWithResult(state, name, result);
             pi.appendEntry(STATE_ENTRY_TYPE, state);
             if (ctx.hasUI) {
               ctx.ui.setStatus(EXTENSION_COMMAND, buildStatusText(state));
             }
-            notify(ctx, formatResultForDisplay(result));
+            notify(ctx, formatVerifyResult(result));
           } catch (error) {
             notify(
               ctx,
-              `Verification failed: ${error instanceof Error ? error.message : String(error)}`
+              `Verification failed: ${error instanceof Error ? error.message : String(error)}`,
+              "error"
             );
+            // Restore status bar on error
+            if (ctx.hasUI) {
+              ctx.ui.setStatus(EXTENSION_COMMAND, buildStatusText(state));
+            }
           }
           return;
         }
@@ -150,32 +165,53 @@ export default function extensionTemplate(pi: ExtensionAPI) {
     };
   }
 
-  function formatResultForDisplay(result: VerifyResult): string {
+  function formatCheckResult(check: CheckResult): string {
+    const indicator = check.success ? "✓" : "✗";
+    const duration = (check.duration / 1000).toFixed(1);
+    let line = `${indicator} ${check.type}: ${duration}s`;
+
+    if (check.parsedTestResult) {
+      const { passed, failed, skipped } = check.parsedTestResult;
+      const parts = [`${passed} passed`];
+      if (failed > 0) parts.push(`${failed} failed`);
+      if (skipped > 0) parts.push(`${skipped} skipped`);
+      line += ` (${parts.join(", ")})`;
+    } else if (!check.success && check.error) {
+      line += ` (${check.error})`;
+    }
+
+    return line;
+  }
+
+  function formatVerifyResult(result: VerifyResult): string {
     const lines: string[] = [];
     const indicator = result.success ? "✓" : "✗";
+    const duration = (result.summary.duration / 1000).toFixed(1);
+
     lines.push(
-      `${indicator} ${result.summary.passed} passed, ${result.summary.failed} failed (${result.summary.duration}ms)`
+      `${indicator} ${result.summary.passed} passed, ${result.summary.failed} failed (${duration}s total)`
     );
+    lines.push("");
 
     for (const check of result.checks) {
-      const checkIndicator = check.success ? "✓" : "✗";
-      lines.push(`  ${checkIndicator} ${check.type} (${check.duration}ms)`);
-      if (!check.success && check.error) {
-        lines.push(`    Error: ${check.error}`);
-      }
+      lines.push(formatCheckResult(check));
     }
 
     return lines.join("\n");
   }
+
+  // formatResultForDisplay is available if needed for backward compatibility
+  // Currently using formatVerifyResult directly
 }
 
 /** Notify via TUI when available, otherwise console. */
 function notify(
   ctx: { hasUI: boolean; ui: { notify: (message: string, level: "info" | "error") => void } },
-  message: string
+  message: string,
+  level: "info" | "error" = "info"
 ): void {
   if (ctx.hasUI) {
-    ctx.ui.notify(message, "info");
+    ctx.ui.notify(message, level);
   } else {
     console.log(message);
   }
