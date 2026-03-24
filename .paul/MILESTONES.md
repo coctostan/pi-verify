@@ -120,9 +120,49 @@ All PALS enforcement mechanisms confirmed operational:
 
 ---
 
+## v0.6 Two-Step Dispatch Test
+
+**Version:** v0.6.0  
+**Status:** ✅ Complete  
+**Phases:** 1 of 1  
+**Completed:** 2026-03-24
+
+### Summary
+
+Demonstrated that PALS two-step dispatch works: advisory module output (IRIS, RUBY,
+DOCS, SKIP) is visible BEFORE enforcement modules (WALT) issue blocks.
+
+### Phases
+
+| Phase | Name | Status |
+|-------|------|--------|
+| 8 | Two-Step Dispatch Test | ✅ Complete |
+
+### Key Deliverables
+
+- Proof that two-step dispatch semantics work correctly
+- Advisory annotations visible before enforcement blocks
+- Fix-and-continue pattern validated with observability
+
+### Two-Step Dispatch Demonstrated
+
+```
+STEP 1 (Advisory p200-p300):
+  IRIS ✓  Code smells detected
+  RUBY ✓  Debt flags raised
+  DOCS ✓  Drift warnings logged
+  SKIP ✓  Decisions extracted
+
+STEP 2 (Enforcement p100):
+  TODD ✓  Tests pass
+  WALT ⚠️  Block (with advisory output visible) → Fix → Pass
+```
+
+---
+
 ## Current: Next Milestone
 
-**Version:** v0.5.0 (planned)  
+**Version:** v0.7.0 (planned)  
 **Status:** 🚧 Planning  
 **Theme:** Multi-language support (Rust/Python/Go)
 
