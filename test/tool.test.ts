@@ -35,11 +35,11 @@ void test("detectProjectType returns null for non-existent path", async () => {
 
 void test("getCheckCommand returns command for available scripts", () => {
   const scripts = { test: "node --test", lint: "eslint ." };
-  assert.equal(getCheckCommand("test", scripts), "npm run test");
-  assert.equal(getCheckCommand("lint", scripts), "npm run lint");
+  assert.equal(getCheckCommand("nodejs", "test", scripts), "npm run test");
+  assert.equal(getCheckCommand("nodejs", "lint", scripts), "npm run lint");
 });
 
 void test("getCheckCommand returns fallback for typecheck", () => {
   const scripts = {};
-  assert.equal(getCheckCommand("typecheck", scripts), "npx tsc --noEmit");
+  assert.equal(getCheckCommand("nodejs", "typecheck", scripts), "npx tsc --noEmit");
 });

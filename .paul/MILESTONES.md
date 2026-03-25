@@ -174,19 +174,19 @@ IRIS/RUBY/DOCS/SKIP run first with upgraded output, then WALT enforcement block.
 
 ### Phases
 
-| Phase | Name | Status |
-|-------|------|--------|
-| 9 | Full Retest | ✅ Complete |
+| Phase | Name        | Status      |
+| ----- | ----------- | ----------- |
+| 9     | Full Retest | ✅ Complete |
 
 ### All 5 Triggers Verified
 
-| Trigger | Target | Module | Status |
-|---------|--------|--------|--------|
-| Complex function (6 params, 60 lines, magic 42) | verify.ts | IRIS + RUBY | ✅ Detected |
-| Unused import | index.ts | WALT | ✅ Blocked → Fixed |
-| Doc drift (README/CHANGELOG) | tool.ts | DOCS | ✅ Logged |
-| Decision | STATE.md | SKIP | ✅ Extracted |
-| Fake API key | constants.ts | IRIS | ✅ Pattern detected |
+| Trigger                                         | Target       | Module      | Status              |
+| ----------------------------------------------- | ------------ | ----------- | ------------------- |
+| Complex function (6 params, 60 lines, magic 42) | verify.ts    | IRIS + RUBY | ✅ Detected         |
+| Unused import                                   | index.ts     | WALT        | ✅ Blocked → Fixed  |
+| Doc drift (README/CHANGELOG)                    | tool.ts      | DOCS        | ✅ Logged           |
+| Decision                                        | STATE.md     | SKIP        | ✅ Extracted        |
+| Fake API key                                    | constants.ts | IRIS        | ✅ Pattern detected |
 
 ### Hardened Two-Step Dispatch Confirmed
 

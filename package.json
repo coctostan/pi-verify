@@ -1,22 +1,29 @@
 {
-  "name": "my-pi-extension",
-  "version": "0.1.0",
-  "description": "Starter template for building robust Pi extensions",
+  "name": "pi-verify",
+  "version": "1.0.0",
+  "description": "Pi extension for running verification checks (typecheck, test, lint, build) with structured output",
   "keywords": [
     "pi-package",
     "pi-extension",
-    "template"
+    "verify",
+    "test",
+    "lint",
+    "typecheck"
   ],
   "type": "module",
   "main": "./src/index.ts",
   "files": [
     "src/",
-    "starters/",
     "scripts/",
     "README.md"
   ],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
   "scripts": {
-    "setup-template": "node ./scripts/setup.mjs",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -30,7 +37,7 @@
     "extensions": [
       "./src/index.ts"
     ],
-    "image": "https://placehold.co/1200x630/png?text=My+Pi+Extension"
+    "image": "https://placehold.co/1200x630/png?text=pi-verify"
   },
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",

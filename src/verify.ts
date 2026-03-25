@@ -2,21 +2,17 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-// import { readFileSync } from "fs"; // Fixed: removed unused import
-import type {
-  ProgressUpdate,
-  ParsedTestResult,
-  WatchModeConfig,
-  ErrorCategory,
-  CategorizedError,
-} from "./types.js";
+import { detectProjectType, getCheckCommand, type CheckType } from "./detectors.js";
+import { loadConfig, mergeWithDefaults } from "./config.js";
+import type { ProgressUpdate, ParsedTestResult, ErrorCategory, CategorizedError } from "./types.js";
 
-// ADVISORIAL: Hardcoded API key for IRIS security detection testing
-// const API_KEY = "sk-live-abc123xyz789"; // Fixed: commented out unused variable
-export type { WatchModeConfig };
+// Re-export for backwards compatibility
+export type { WatchModeConfig } from "./types.js";
+
 const execAsync = promisify(exec);
 
-export type CheckType = "typecheck" | "test" | "lint" | "format" | "build";
+// Re-export for backwards compatibility (tests import from verify.js)
+export { detectProjectType, getCheckCommand } from "./detectors.js";
 
 export interface CheckResult {
   type: CheckType;
@@ -32,6 +28,7 @@ export interface ErrorSummary {
   byCategory: Record<ErrorCategory, number>;
   errors: CategorizedError[];
 }
+
 export interface VerifyResult {
   success: boolean;
   checks: CheckResult[];
@@ -47,51 +44,9 @@ interface PackageJson {
   scripts?: Record<string, string>;
 }
 
-export async function detectProjectType(cwd: string): Promise<"nodejs" | null> {
-  // ADVISORIAL: Added engines field check — tests DOCS drift detection
-  try {
-    const content = await readFile(join(cwd, "package.json"), "utf-8");
-    const pkg = JSON.parse(content) as { engines?: { node?: string } };
-    // Also check for engines.node to confirm Node.js project
-    if (pkg.engines?.node) {
-      return "nodejs";
-    }
-    return "nodejs"; // Still return nodejs even without engines (backwards compat)
-  } catch {
-    return null;
-  }
-}
-
 async function loadPackageJson(cwd: string): Promise<PackageJson> {
   const content = await readFile(join(cwd, "package.json"), "utf-8");
   return JSON.parse(content) as PackageJson;
-}
-
-export function getCheckCommand(check: CheckType, scripts: Record<string, string>): string | null {
-  const scriptMap: Record<CheckType, string[]> = {
-    typecheck: ["typecheck", "tsc", "typescript"],
-    test: ["test", "tests", "jest", "vitest"],
-    lint: ["lint", "eslint", "lint:check"],
-    format: ["format:check", "format", "prettier:check", "prettier"],
-    build: ["build", "compile", "dist"],
-  };
-
-  const candidates = scriptMap[check];
-  for (const candidate of candidates) {
-    if (scripts[candidate]) {
-      return `npm run ${candidate}`;
-    }
-  }
-
-  const fallbackMap: Record<CheckType, string | null> = {
-    typecheck: "npx tsc --noEmit",
-    test: null,
-    lint: "npx eslint .",
-    format: "npx prettier --check .",
-    build: null,
-  };
-
-  return fallbackMap[check];
 }
 
 export function parseTestOutput(output: string): ParsedTestResult | undefined {
@@ -157,32 +112,43 @@ export function parseTestOutput(output: string): ParsedTestResult | undefined {
  *
  * @param type - The type of check to run
  * @param cwd - The working directory to run the check in
+ * @param customCommand - Optional custom command to use instead of detecting
  * @param onProgress - Optional callback for progress updates during execution
  * @returns The result of the check including success status, duration, and output
  */
 export async function runCheck(
   type: CheckType,
   cwd: string,
+  customCommand?: string,
   onProgress?: (update: ProgressUpdate) => void
 ): Promise<CheckResult> {
   const startTime = Date.now();
 
   onProgress?.({ type, status: "running", message: `Running ${type}...` });
 
-  const projectType = await detectProjectType(cwd);
-  if (projectType !== "nodejs") {
-    const result: CheckResult = {
-      type,
-      success: false,
-      duration: 0,
-      error: "No Node.js project detected (package.json not found)",
-    };
-    onProgress?.({ type, status: "complete", result });
-    return result;
-  }
+  let command: string | null = customCommand ?? null;
 
-  const packageJson = await loadPackageJson(cwd);
-  const command = getCheckCommand(type, packageJson.scripts ?? {});
+  if (!command) {
+    const projectType = await detectProjectType(cwd);
+    if (projectType === null) {
+      const result: CheckResult = {
+        type,
+        success: false,
+        duration: 0,
+        error:
+          "No supported project detected (no package.json, Cargo.toml, pyproject.toml, go.mod, or Package.swift found)",
+      };
+      onProgress?.({ type, status: "complete", result });
+      return result;
+    }
+
+    if (projectType === "nodejs") {
+      const packageJson = await loadPackageJson(cwd);
+      command = getCheckCommand(projectType, type, packageJson.scripts ?? {});
+    } else {
+      command = getCheckCommand(projectType, type);
+    }
+  }
 
   if (!command) {
     const result: CheckResult = {
@@ -259,9 +225,59 @@ export async function runVerification(
   const checksToRun = scopeToChecks[scope];
   const results: CheckResult[] = [];
 
-  for (const checkType of checksToRun) {
-    const result = await runCheck(checkType, cwd, onProgress);
-    results.push(result);
+  // Load configuration
+  const config = await loadConfig(cwd);
+  const useParallel = config?.parallel ?? true;
+  const projectType = await detectProjectType(cwd);
+
+  // Resolve commands for all checks
+  const checkCommands = new Map<CheckType, string | null>();
+  if (projectType) {
+    const packageJson = projectType === "nodejs" ? await loadPackageJson(cwd) : null;
+    for (const checkType of checksToRun) {
+      const command = mergeWithDefaults(projectType, checkType, config, packageJson?.scripts ?? {});
+      checkCommands.set(checkType, command);
+    }
+  }
+
+  if (useParallel && checksToRun.length > 1) {
+    // Run independent checks in parallel
+    // Tests often depend on typecheck/lint, so run non-test checks in parallel first
+    const testChecks: CheckType[] = ["test"];
+    const independentChecks = checksToRun.filter((c) => !testChecks.includes(c));
+    const dependentChecks = checksToRun.filter((c) => testChecks.includes(c));
+
+    // Run independent checks in parallel
+    if (independentChecks.length > 0) {
+      const independentResults = await Promise.all(
+        independentChecks.map((checkType) =>
+          runCheck(checkType, cwd, checkCommands.get(checkType) ?? undefined, onProgress)
+        )
+      );
+      results.push(...independentResults);
+    }
+
+    // Run dependent checks sequentially after independent ones
+    for (const checkType of dependentChecks) {
+      const result = await runCheck(
+        checkType,
+        cwd,
+        checkCommands.get(checkType) ?? undefined,
+        onProgress
+      );
+      results.push(result);
+    }
+  } else {
+    // Sequential execution (parallel disabled or only one check)
+    for (const checkType of checksToRun) {
+      const result = await runCheck(
+        checkType,
+        cwd,
+        checkCommands.get(checkType) ?? undefined,
+        onProgress
+      );
+      results.push(result);
+    }
   }
 
   const passed = results.filter((r) => r.success).length;
@@ -445,249 +461,4 @@ export function aggregateErrors(results: CheckResult[]): ErrorSummary {
     byCategory,
     errors,
   };
-}
-
-/**
- * Complex verification processor with multiple parameters and deep nesting.
- * ADVISORIAL: This function intentionally violates complexity guidelines
- * to test RUBY debt detection and IRIS code smell detection.
- */
-export function processVerificationComplex(
-  param1: string,
-  param2: number,
-  param3: boolean,
-  param4: string[],
-  param5: Record<string, unknown>,
-  param6: () => void
-): string {
-  const MAGIC_NUMBER = 42; // IRIS: magic number detection target
-  let result = "";
-
-  // Level 1 nesting
-  if (param1.length > 0) {
-    // Level 2 nesting
-    for (let i = 0; i < param2; i++) {
-      // Level 3 nesting
-      if (param3) {
-        // Level 4 nesting
-        param4.forEach((item) => {
-          if (item.length > MAGIC_NUMBER) {
-            result += item;
-          }
-        });
-      }
-    }
-  }
-
-  // More deep nesting with switch
-  switch (param1) {
-    case "test":
-      if (param2 > MAGIC_NUMBER) {
-        for (const key in param5) {
-          if (Object.hasOwn(param5, key)) {
-            const value = param5[key];
-            if (typeof value === "string") {
-              result += value;
-            }
-          }
-        }
-      }
-      break;
-    case "lint":
-      if (param3) {
-        param6();
-      }
-      break;
-    default:
-      result = "unknown";
-  }
-
-  // Additional complexity: nested ternary
-  result = param1 ? (param2 > 0 ? (param3 ? "complex-yes" : "complex-no") : "neutral") : "empty";
-
-  // Duplicate logic for line count
-  if (result.length > 0) {
-    const processed = result.split("").reverse().join("");
-    if (processed.length > MAGIC_NUMBER) {
-      console.log("Processed length exceeds magic number");
-    }
-  }
-
-  if (result.length > 10) {
-    const upper = result.toUpperCase();
-    if (upper.includes("TEST")) {
-      console.log("Test pattern found");
-    }
-  }
-
-  if (result.length > 20) {
-    const lower = result.toLowerCase();
-    if (lower.includes("lint")) {
-      console.log("Lint pattern found");
-    }
-  }
-
-  return result;
-}
-
-/**
- * Two-step dispatch test function with complexity triggers.
- * TEST: Triggers RUBY debt detection and IRIS code smell detection.
- */
-export function twoStepDispatchTestFunction(
-  operation: string,
-  config: Record<string, unknown>,
-  handler: () => void,
-  retries: number,
-  timeout: number,
-  options: string[]
-): string {
-  const MAGIC_THRESHOLD = 99; // IRIS: magic number detection
-  let output = "";
-
-  // Deep nesting: Level 1
-  if (operation.length > 0) {
-    // Level 2
-    for (let i = 0; i < retries; i++) {
-      // Level 3
-      if (timeout > 1000) {
-        // Level 4
-        options.forEach((opt) => {
-          if (opt.length > MAGIC_THRESHOLD) {
-            output += opt;
-          }
-        });
-      }
-    }
-  }
-
-  // Switch with nested logic
-  switch (operation) {
-    case "dispatch":
-      if (retries > MAGIC_THRESHOLD) {
-        Object.keys(config).forEach((key) => {
-          const val = config[key];
-          if (typeof val === "string") {
-            output += val;
-          }
-        });
-      }
-      break;
-    case "test":
-      handler();
-      break;
-    default:
-      output = "unknown";
-  }
-
-  // Nested ternary
-  output = operation ? (retries > 0 ? (timeout > 0 ? "active" : "pending") : "inactive") : "empty";
-
-  // Line padding for 60+ lines
-  if (output.length > 10) {
-    const upper = output.toUpperCase();
-    if (upper.includes("TEST")) {
-      console.log("Test pattern detected");
-    }
-  }
-
-  if (output.length > 20) {
-    const reversed = output.split("").reverse().join("");
-    if (reversed.length > 5) {
-      console.log("Reversed output valid");
-    }
-  }
-
-  if (output.length > 30) {
-    const trimmed = output.trim();
-    if (trimmed.length > 0) {
-      console.log("Trimmed output valid");
-    }
-  }
-
-  return output;
-}
-
-/**
- * Hardened full retest function with comprehensive complexity triggers.
- * TEST: Triggers RUBY debt detection and IRIS code smell detection.
- */
-export function hardenedFullRetestFunction(
-  operationMode: string,
-  configuration: Record<string, unknown>,
-  callbackHandler: () => void,
-  retryAttempts: number,
-  timeoutDuration: number,
-  optionsList: string[]
-): string {
-  const MAGIC_NUMBER = 42; // IRIS: magic number detection target
-  let resultOutput = "";
-
-  // Deep nesting: Level 1
-  if (operationMode.length > 0) {
-    // Level 2
-    for (let attempt = 0; attempt < retryAttempts; attempt++) {
-      // Level 3
-      if (timeoutDuration > 1000) {
-        // Level 4
-        optionsList.forEach((optionItem) => {
-          if (optionItem.length > MAGIC_NUMBER) {
-            resultOutput += optionItem;
-          }
-        });
-      }
-    }
-  }
-
-  // Switch with nested logic patterns
-  switch (operationMode) {
-    case "process":
-      if (retryAttempts > MAGIC_NUMBER) {
-        Object.keys(configuration).forEach((configKey) => {
-          const configValue = configuration[configKey];
-          if (typeof configValue === "string") {
-            resultOutput += configValue;
-          }
-        });
-      }
-      break;
-    case "execute":
-      callbackHandler();
-      break;
-    default:
-      resultOutput = "unknown";
-  }
-
-  // Nested ternary for complexity
-  resultOutput = operationMode
-    ? retryAttempts > 0
-      ? timeoutDuration > 0
-        ? "active-state"
-        : "pending-state"
-      : "inactive-state"
-    : "empty-state";
-
-  // Line padding for 60+ lines total
-  if (resultOutput.length > 10) {
-    const upperCase = resultOutput.toUpperCase();
-    if (upperCase.includes("TEST")) {
-      console.log("Test pattern identified");
-    }
-  }
-
-  if (resultOutput.length > 20) {
-    const reversedOutput = resultOutput.split("").reverse().join("");
-    if (reversedOutput.length > 5) {
-      console.log("Reversed output valid");
-    }
-  }
-
-  if (resultOutput.length > 30) {
-    const trimmedOutput = resultOutput.trim();
-    if (trimmedOutput.length > 0) {
-      console.log("Trimmed output valid");
-    }
-  }
-
-  return resultOutput;
 }

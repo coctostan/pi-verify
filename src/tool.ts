@@ -1,27 +1,6 @@
 import type { VerifyInput } from "./types.js";
-import { runVerification, type CheckResult } from "./verify.js";
-
-// TEST: Added constant without README update — triggers DOCS drift
-// const DISPATCH_VERSION = "1.0.0"; // Fixed: commented unused variable
-// TEST: Hardened retest marker without README/CHANGELOG update
-// const RETEST_MARKER = "v0.7"; // Fixed: commented unused variable
-function formatCheckResult(check: CheckResult): string {
-  const indicator = check.success ? "✓" : "✗";
-  const duration = (check.duration / 1000).toFixed(1);
-  let line = `${indicator} ${check.type}: ${duration}s`;
-
-  if (check.parsedTestResult) {
-    const { passed, failed, skipped } = check.parsedTestResult;
-    const parts = [`${passed} passed`];
-    if (failed > 0) parts.push(`${failed} failed`);
-    if (skipped > 0) parts.push(`${skipped} skipped`);
-    line += ` (${parts.join(", ")})`;
-  } else if (!check.success && check.error) {
-    line += ` (${check.error})`;
-  }
-
-  return line;
-}
+import { formatCheckResult } from "./formatters.js";
+import { runVerification } from "./verify.js";
 
 export async function executeVerifyCheck(
   input: VerifyInput,
