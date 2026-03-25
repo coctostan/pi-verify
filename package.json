@@ -8,7 +8,9 @@
     "verify",
     "test",
     "lint",
-    "typecheck"
+    "typecheck",
+    "typescript",
+    "extension"
   ],
   "type": "module",
   "main": "./src/index.ts",
