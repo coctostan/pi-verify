@@ -49,20 +49,20 @@ and npm publication.
 
 ## Phases
 
-| Phase | Name | Plans | Status | Completed |
+| Phase | Name                        | Plans | Status   | Completed  |
 | ----- | --------------------------- | ----- | -------- | ---------- |
-| 1 | Core Verify Command | 01-01 | Complete | 2026-03-24 |
-| 2 | Test Output Formatting | 02-01 | Complete | 2026-03-24 |
-| 3 | Watch Mode Support | 03-01 | Complete | 2026-03-24 |
-| 4 | Error Summarization | 04-01 | Complete | 2026-03-24 |
-| 5 | Adversarial Testing | 05-01 | Complete | 2026-03-24 |
-| 6 | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
-| 8 | Two-Step Dispatch Test | 08-01 | Complete | 2026-03-24 |
-| 9 | Full Retest | 09-01 | Complete | 2026-03-24 |
-| 10 | Cleanup & Identity | 10-01 | Complete | 2026-03-25 |
-| 11 | Multi-Language Core | 11-01 | Complete | 2026-03-25 |
-| 12 | Config & Parallel | 12-01 | Complete | 2026-03-25 |
-| 13 | Publish Prep | 13-01 | Complete | 2026-03-25 |
+| 1     | Core Verify Command         | 01-01 | Complete | 2026-03-24 |
+| 2     | Test Output Formatting      | 02-01 | Complete | 2026-03-24 |
+| 3     | Watch Mode Support          | 03-01 | Complete | 2026-03-24 |
+| 4     | Error Summarization         | 04-01 | Complete | 2026-03-24 |
+| 5     | Adversarial Testing         | 05-01 | Complete | 2026-03-24 |
+| 6     | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
+| 8     | Two-Step Dispatch Test      | 08-01 | Complete | 2026-03-24 |
+| 9     | Full Retest                 | 09-01 | Complete | 2026-03-24 |
+| 10    | Cleanup & Identity          | 10-01 | Complete | 2026-03-25 |
+| 11    | Multi-Language Core         | 11-01 | Complete | 2026-03-25 |
+| 12    | Config & Parallel           | 12-01 | Complete | 2026-03-25 |
+| 13    | Publish Prep                | 13-01 | Complete | 2026-03-25 |
 
 Notes:
 
