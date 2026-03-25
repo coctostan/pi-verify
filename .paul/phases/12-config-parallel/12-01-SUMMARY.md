@@ -12,24 +12,24 @@ Add `.verifyrc.json` configuration support for customizing check commands per pr
 
 ## What Was Built
 
-| File | Purpose | Lines |
-|------|---------|-------|
-| `src/config.ts` | **NEW** Configuration loader with schema validation and merging | 148 lines |
-| `test/config.test.ts` | **NEW** Comprehensive tests for config loading and merging | 211 lines |
-| `src/verify.ts` | Modified to support parallel execution and custom commands | +80 lines (net) |
-| `src/types.ts` | Added VerifyConfig re-export | +2 lines |
+| File                  | Purpose                                                         | Lines           |
+| --------------------- | --------------------------------------------------------------- | --------------- |
+| `src/config.ts`       | **NEW** Configuration loader with schema validation and merging | 148 lines       |
+| `test/config.test.ts` | **NEW** Comprehensive tests for config loading and merging      | 211 lines       |
+| `src/verify.ts`       | Modified to support parallel execution and custom commands      | +80 lines (net) |
+| `src/types.ts`        | Added VerifyConfig re-export                                    | +2 lines        |
 
 **Total:** 2 new files, 2 modified files, ~441 lines added.
 
 ## Acceptance Criteria Results
 
-| AC | Description | Status | Evidence |
-|----|-------------|--------|----------|
-| AC-1 | Configuration File Loading | ✓ PASS | `loadConfig()` reads and parses `.verifyrc.json` correctly |
-| AC-2 | Configuration Schema Validation | ✓ PASS | `validateConfig()` throws descriptive errors for invalid structure |
-| AC-3 | Parallel Check Execution | ✓ PASS | Independent checks run via `Promise.all()`, tests run sequentially after |
-| AC-4 | Backwards Compatibility | ✓ PASS | Projects without `.verifyrc.json` use defaults unchanged |
-| AC-5 | Configuration Merging | ✓ PASS | Partial overrides work, unspecified checks use defaults |
+| AC   | Description                     | Status | Evidence                                                                 |
+| ---- | ------------------------------- | ------ | ------------------------------------------------------------------------ |
+| AC-1 | Configuration File Loading      | ✓ PASS | `loadConfig()` reads and parses `.verifyrc.json` correctly               |
+| AC-2 | Configuration Schema Validation | ✓ PASS | `validateConfig()` throws descriptive errors for invalid structure       |
+| AC-3 | Parallel Check Execution        | ✓ PASS | Independent checks run via `Promise.all()`, tests run sequentially after |
+| AC-4 | Backwards Compatibility         | ✓ PASS | Projects without `.verifyrc.json` use defaults unchanged                 |
+| AC-5 | Configuration Merging           | ✓ PASS | Partial overrides work, unspecified checks use defaults                  |
 
 ## Verification Results
 
@@ -107,6 +107,7 @@ Else:
 **None.** All tasks completed as specified.
 
 Minor implementation notes:
+
 - Used `string | null` for command values to allow explicit disabling of checks
 - Parallel execution runs independent checks (typecheck, lint, format) in parallel, then tests sequentially
 - Progress callbacks are preserved and fire for each check even in parallel mode
@@ -128,6 +129,7 @@ Minor implementation notes:
 **Phase 13: Publish Prep**
 
 Final phase of v1.0 milestone — prepare the package for npm publication:
+
 - Final package.json polish
 - Exports map configuration
 - Delete starters/ directory

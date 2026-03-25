@@ -8,8 +8,10 @@ pi-verify auto-detects your project type and runs the appropriate verification c
 
 **Key features:**
 
-- **Auto-detection**: Identifies Node.js projects via package.json
+- **Multi-language support**: Auto-detects Node.js, Rust, Python, Go, and Swift projects
 - **Structured output**: JSON results with error categorization (TypeError, LintViolation, TestFailure, etc.)
+- **Configuration**: Customize check commands per project via `.verifyrc.json`
+- **Parallel execution**: Run independent checks in parallel for faster results
 - **Test parsing**: Extracts results from Jest, Vitest, and node:test
 - **Watch mode detection**: Recognizes watch flags for supported frameworks
 - **Colored terminal output**: Clear visual feedback via chalk
@@ -109,6 +111,48 @@ Returns structured JSON:
 }
 ```
 
+## Multi-Language Support
+
+pi-verify auto-detects project types and runs appropriate checks:
+
+| Language | Detection                              | Default Commands                             |
+| -------- | -------------------------------------- | -------------------------------------------- |
+| Node.js  | `package.json`                         | npm/pnpm/yarn run typecheck/test/lint/format |
+| Rust     | `Cargo.toml`                           | cargo test, cargo clippy, cargo fmt          |
+| Python   | `requirements.txt` or `pyproject.toml` | pytest, ruff check/format                    |
+| Go       | `go.mod`                               | go test, go vet, gofmt                       |
+| Swift    | `Package.swift`                        | swift test, swiftlint                        |
+
+## Configuration
+
+Create `.verifyrc.json` in your project root to customize check commands:
+
+```json
+{
+  "commands": {
+    "nodejs": {
+      "test": "npm run test:ci",
+      "lint": "npm run lint:strict"
+    },
+    "rust": {
+      "test": "cargo test --release"
+    }
+  },
+  "parallel": true
+}
+```
+
+### Configuration Options
+
+- `commands`: Custom commands per project type and check type
+  - Set to `null` to disable a specific check
+  - Supports `nodejs`, `rust`, `python`, `go`, `swift`
+- `parallel`: Run independent checks in parallel (default: `true`)
+
+## Parallel Execution
+
+When `parallel: true` (default), pi-verify runs independent checks (typecheck, lint, format) in parallel, then runs tests sequentially. This significantly speeds up verification while respecting test dependencies.
+
 ## Watch Mode Support
 
 pi-verify detects watch mode for supported test runners:
@@ -155,8 +199,8 @@ LintViolation (1):
 ## Requirements
 
 - Node.js >= 22
-- A Node.js project with `package.json`
-- Standard tooling scripts (typecheck, test, lint, format) in package.json
+- Project with appropriate manifest file (package.json, Cargo.toml, etc.)
+- Standard tooling scripts in your project config
 
 ## License
 

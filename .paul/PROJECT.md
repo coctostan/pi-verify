@@ -13,15 +13,15 @@ feedback instead of requiring individual command execution and raw output parsin
 
 ## Current State
 
-| Attribute    | Value          |
-| ------------ | -------------- |
-| Version      | 1.0.0-beta     |
-| Status       | In Progress    |
-| Last Updated | 2026-03-25     |
-| ------------ | ---------- |
-| Version      | 0.6.0      |
-| Status       | Shipped    |
-| Last Updated | 2026-03-24 |
+| Attribute    | Value       |
+| ------------ | ----------- |
+| Version      | 1.0.0-beta  |
+| Status       | In Progress |
+| Last Updated | 2026-03-25  |
+| ------------ | ----------  |
+| Version      | 0.6.0       |
+| Status       | Shipped     |
+| Last Updated | 2026-03-24  |
 
 **Current system summary:**
 

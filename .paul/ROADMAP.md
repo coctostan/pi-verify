@@ -42,7 +42,7 @@ Theme: Hardened retest of two-step dispatch with all 5 triggers verified.
 
 ## Current Milestone
 
-| 11    | Multi-Language Core         | 11-01 | Complete    | 2026-03-25 |
+| 11 | Multi-Language Core | 11-01 | Complete | 2026-03-25 |
 Status: 🚧 In Progress
 Phases: 3 of 4 complete
 Phases: 0 of 4 complete
@@ -52,21 +52,22 @@ and npm publication. Exercises all 18 PALS modules.
 
 ## Phases
 
-| Phase | Name                        | Plans | Status      | Completed  |
-| ----- | --------------------------- | ----- | ----------- | ---------- |
-| 1     | Core Verify Command         | 01-01 | Complete    | 2026-03-24 |
-| 2     | Test Output Formatting      | 02-01 | Complete    | 2026-03-24 |
-| 3     | Watch Mode Support          | 03-01 | Complete    | 2026-03-24 |
-| 4     | Error Summarization         | 04-01 | Complete    | 2026-03-24 |
-| 5     | Adversarial Testing         | 05-01 | Complete    | 2026-03-24 |
-| 6     | Advisory Module Stress Test | 06-01 | Complete    | 2026-03-24 |
-| 8     | Two-Step Dispatch Test      | 08-01 | Complete    | 2026-03-24 |
-| 9     | Full Retest                 | 09-01 | Complete    | 2026-03-24 |
-| 10    | Cleanup & Identity          | 10-01 | Complete    | 2026-03-25 |
-| 11    | Multi-Language Core         | 11-01 | Complete    | 2026-03-25 |
+| Phase | Name                        | Plans | Status   | Completed  |
+| ----- | --------------------------- | ----- | -------- | ---------- |
+| 1     | Core Verify Command         | 01-01 | Complete | 2026-03-24 |
+| 2     | Test Output Formatting      | 02-01 | Complete | 2026-03-24 |
+| 3     | Watch Mode Support          | 03-01 | Complete | 2026-03-24 |
+| 4     | Error Summarization         | 04-01 | Complete | 2026-03-24 |
+| 13    | Publish Prep                | 13-01 | Complete    | 2026-03-25 |
+| 6     | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
+| 8     | Two-Step Dispatch Test      | 08-01 | Complete | 2026-03-24 |
+| 9     | Full Retest                 | 09-01 | Complete | 2026-03-24 |
+| 10    | Cleanup & Identity          | 10-01 | Complete | 2026-03-25 |
+| 11    | Multi-Language Core         | 11-01 | Complete | 2026-03-25 |
+
 - Phase 12: [████████████████████] 100% ✓ (Config & Parallel complete)
   - Phase 13: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
-| 13    | Publish Prep                | 13-01 | Not started | -          |
+    | 13 | Publish Prep | 13-01 | Planning | - |
 
 Notes:
 
