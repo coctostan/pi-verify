@@ -63,3 +63,8 @@ export interface ErrorSummary {
   byCategory: Record<ErrorCategory, number>;
   errors: CategorizedError[];
 }
+
+// Re-export ProjectType from detectors for convenience
+export type { ProjectType } from "./detectors.js";
+// Re-export VerifyConfig from config for convenience
+export type { VerifyConfig } from "./config.js";

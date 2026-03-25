@@ -11,6 +11,7 @@ import {
   TOOL_NAME,
 } from "./constants.js";
 import { buildHelpText, parseSubcommand } from "./commands.js";
+import { formatCheckResult } from "./formatters.js";
 import {
   runVerification,
   type VerifyResult,
@@ -173,25 +174,6 @@ export default function extensionTemplate(pi: ExtensionAPI) {
         summary: `${result.summary.passed}/${result.summary.passed + result.summary.failed} checks passed`,
       },
     };
-  }
-
-  function formatCheckResult(check: CheckResult, chalkInstance?: typeof chalk): string {
-    const indicator = check.success
-      ? (chalkInstance?.green("✓") ?? "✓")
-      : (chalkInstance?.red("✗") ?? "✗");
-    const duration = (check.duration / 1000).toFixed(1);
-    const typeLabel = chalkInstance?.cyan(check.type) ?? check.type;
-    let line = `${indicator} ${typeLabel}: ${duration}s`;
-    if (check.parsedTestResult) {
-      const { passed, failed, skipped } = check.parsedTestResult;
-      const parts = [`${passed} passed`];
-      if (failed > 0) parts.push(chalkInstance?.red(`${failed} failed`) ?? `${failed} failed`);
-      if (skipped > 0) parts.push(`${skipped} skipped`);
-      line += ` (${parts.join(", ")})`;
-    } else if (!check.success && check.error) {
-      line += ` (${chalkInstance?.red(check.error) ?? check.error})`;
-    }
-    return line;
   }
 
   function formatVerifyResult(result: VerifyResult): string {

@@ -9,13 +9,11 @@ verification feedback instead of requiring individual command execution and raw 
 
 **Current focus:** v0.4 complete — ready for next milestone
 
-## Current Position
-
 Milestone: v1.0 Ship-Ready Product
-Phase: 10 of 13 (Cleanup & Identity)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-24 — Milestone v1.0 created
+Phase: 12 of 13 (Config & Parallel) — Complete
+Plan: 12-01 complete
+Status: UNIFY complete, ready for transition
+Last activity: 2026-03-25 — Phase 12 UNIFY complete
 
 Progress:
 
@@ -26,20 +24,18 @@ Progress:
 - v0.5 Module Stress Test: [░░░░░░░░░░░░░░░░░░░░] CANCELED (stop-on-block confirmed)
 - v0.6 Two-Step Dispatch Test: [████████████████████] 100% ✓
 - v0.7 Hardened Module Retest: [████████████████████] 100% ✓
-- v1.0 Ship-Ready Product: [░░░░░░░░░░░░░░░░░░░░] 0%
-  - Phase 10: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
-  - Phase 11: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
-  - Phase 12: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
+- v1.0 Ship-Ready Product: [████████████░░░░░░░░] 75%
+  - Phase 10: [████████████████████] 100% ✓ (Cleanup & Identity complete)
+  - Phase 11: [████████████████████] 100% ✓ (Multi-Language Core complete)
+  - Phase 12: [████████████████████] 100% ✓ (Config & Parallel complete)
   - Phase 13: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
-  - Phase 9: [████████████████████] 100% ✓ (Hardened retest complete)
 
 ## Loop Position
 
 Current loop state:
-
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for first PLAN]
+  ✓        ✓        ✓     [Loop complete - ready for next PLAN]
 ```
 
 ## Accumulated Context
@@ -61,6 +57,8 @@ PLAN ──▶ APPLY ──▶ UNIFY
 | 2026-03-24 | Adopted two-step dispatch for better module observability         | Phase 8 | Tests advisory→enforcement ordering         |
 | 2026-03-24 | Chose ESLint over custom AST analysis for complexity detection    | Phase 9 | Hardened SKIP knowledge extraction test     |
 | 2026-03-24 | All 5 hardened triggers confirmed in two-step dispatch            | Phase 9 | Hardened module retest validated            |
+| 2026-03-25 | Config system uses null for disabled checks                       | Phase 12| Allows explicitly disabling checks          |
+| 2026-03-25 | Parallel execution runs independent checks first, then test       | Phase 12| Tests often depend on typecheck/lint        |
 
 ### Fixes
 
@@ -71,9 +69,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Deferred Issues
 
-- Multi-language support (Rust/Python/Go) — v0.5 milestone
-- Caching of check results — v0.6 milestone
-- Custom check configurations — v0.7 milestone
+- Caching of check results — Phase 13+ consideration
 
 ### Git State
 
@@ -88,7 +84,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-24
-Stopped at: Milestone v1.0 created, ready to plan Phase 10
-Next action: /paul:plan for Phase 10 (Cleanup & Identity)
-Resume file: .paul/ROADMAP.md
+Stopped at: Phase 12 UNIFY complete, SUMMARY.md created
+Next action: Transition to Phase 13 (Publish Prep) — final phase of v1.0 milestone
+Resume file: .paul/phases/12-config-parallel/12-01-SUMMARY.md
