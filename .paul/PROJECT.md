@@ -34,7 +34,7 @@ feedback instead of requiring individual command execution and raw output parsin
 
 ## Scope Snapshot
 
-### Validated (v1.0.0)
+### Validated (v1.1.0)
 
 - [x] `/verify` command with all/test/lint/quick subcommands — v1.0
 - [x] Node.js project detection (package.json) — v0.1
@@ -48,9 +48,9 @@ feedback instead of requiring individual command execution and raw output parsin
 - [x] Parallel execution for independent checks (typecheck, lint, format) — v1.0
 - [x] Clean npm-publishable package with exports map — v1.0
 
-### Active (v1.1+)
+### Active (v1.2+)
 
-### Planned (v1.1+)
+### Planned (v1.2+)
 - Caching of check results — v1.2 consideration
 - Plugin ecosystem for custom checks — v1.3 consideration
 
@@ -95,6 +95,8 @@ anything.
 | Parallel runs independent checks first, test last               | Tests often depend on typecheck/lint; sequencing avoids false failures   | 2026-03-25 | Active |
 | `starters/` directory deleted before publish                    | Template files not needed in runtime package; clean tarball              | 2026-03-25 | Active |
 | Exports map added to package.json                               | Future-proof ESM/CJS dual compatibility for npm consumers                | 2026-03-25 | Active |
+| DEAN block override valid when vulns are pre-existing in dep tree  | Planned files add no new deps; Δ=0 at post-apply confirmed no regression | 2026-03-25 | Active |
+| All 12 PALS modules fire correctly in a single APPLY cycle          | SETH/IRIS/OMAR/GABE/LUKE/ARIA/PETE/DANA/REED/TODD/DEAN/DOCS all triggered | 2026-03-25 | Active |
 
 ## Links
 
@@ -103,4 +105,4 @@ anything.
 
 ---
 
-_Last updated: 2026-03-25 after v1.0 Ship-Ready Product (milestone complete)_
+_Last updated: 2026-03-25 after v1.1 Adversarial Module Bait (milestone complete)_

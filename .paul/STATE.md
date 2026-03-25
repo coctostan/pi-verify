@@ -60,6 +60,8 @@ PLAN ──▶ APPLY ──▶ UNIFY
 | 2026-03-25 | Config system uses null for disabled checks                       | Phase 12 | Allows explicitly disabling checks          |
 | 2026-03-25 | Parallel execution runs independent checks first, then test       | Phase 12 | Tests often depend on typecheck/lint        |
 | 2026-03-25 | Deleted starters/ directory and test/starters.test.ts             | Phase 13 | Clean package for npm publish               |
+| 2026-03-25 | DEAN block override valid when pre-existing vulns only             | Phase 14 | Plan proceeds; post-apply Δ=0 confirms no regression     |
+| 2026-03-25 | All 12 PALS modules confirmed firing in single APPLY cycle        | Phase 14 | SETH/IRIS/OMAR/GABE/LUKE/ARIA/PETE/DANA/REED/TODD/DEAN/DOCS |
 
 ### Fixes
 
@@ -76,9 +78,9 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 | Item        | Value                                                                       |
 | ----------- | --------------------------------------------------------------------------- |
-| Branch      | feature/14-module-bait-implementation                                       |
-| Last commit | ee69d6c (feat(14-module-bait-implementation): adversarial PALS trigger files) |
-| PR          | https://github.com/coctostan/pi-verify/pull/10 (state: open)                |
+| Branch      | main                                                                         |
+| Last commit | 8f69a6f (feat(14-module-bait-implementation): adversarial PALS module bait — v1.1 (#10)) |
+| PR          | https://github.com/coctostan/pi-verify/pull/10 (state: MERGED)               |
 
 ### Blockers/Concerns
 

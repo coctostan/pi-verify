@@ -8,8 +8,8 @@ in status bar.
 
 ## Current Milestone
 **v1.1 Adversarial Module Bait** (v1.1.0)
-Status: 🚧 In Progress
-Phases: 0 of 1 complete
+Status: ✅ Complete — SHIPPED
+Phases: 1 of 1 complete
 
 Theme: Add intentionally problematic code designed to trigger every PALS module.
 
@@ -17,13 +17,13 @@ Theme: Add intentionally problematic code designed to trigger every PALS module.
 
 | Phase | Name                       | Plans | Status      | Completed |
 | ----- | -------------------------- | ----- | ----------- | --------- |
-| 14    | Module Bait Implementation | 14-01 | In Progress | -         |
+| 14    | Module Bait Implementation | 14-01 | Complete    | 2026-03-25 |
 
 ### Phase 14: Module Bait Implementation
 
 Focus: Add admin endpoint, dashboard component, and DB helpers — all with deliberate
 anti-patterns to trigger SETH, IRIS, OMAR, GABE, LUKE, ARIA, REED, PETE, DANA, TODD, DEAN.
-Plans: TBD (defined during /paul:plan)
+Plans: 14-01 (complete)
 
 ## Completed Milestones
 
@@ -102,4 +102,4 @@ Notes:
 
 ---
 
-_Roadmap updated: 2026-03-25 — v1.1 Adversarial Module Bait milestone created_
+_Roadmap updated: 2026-03-25 — v1.1 Adversarial Module Bait milestone complete_
