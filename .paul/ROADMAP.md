@@ -17,7 +17,7 @@ Theme: Add intentionally problematic code designed to trigger every PALS module.
 
 | Phase | Name                       | Plans | Status      | Completed |
 | ----- | -------------------------- | ----- | ----------- | --------- |
-| 14    | Module Bait Implementation | TBD   | Not started | -         |
+| 14    | Module Bait Implementation | 14-01 | Planning    | -         |
 
 ### Phase 14: Module Bait Implementation
 

@@ -7,13 +7,74 @@
       "continue_threshold": 0.4,
       "safety_ceiling": 0.8
     },
-    "todd": { "enabled": true, "description": "Test-driven development enforcement" },
-    "walt": { "enabled": true, "description": "Quality gating & validation" },
-    "dean": { "enabled": true, "description": "Dependency evaluation & audit notifier" },
-    "iris": { "enabled": true, "description": "Intelligent review & inspection system" },
-    "skip": { "enabled": true, "description": "Smart knowledge & information persistence" },
-    "dave": { "enabled": true, "description": "Deploy automation & verification engine" },
-    "ruby": { "enabled": true, "description": "Refactor utility & better-code yielder" }
+    "todd": {
+      "enabled": true,
+      "description": "Test-driven development enforcement"
+    },
+    "walt": {
+      "enabled": true,
+      "description": "Quality gating & validation"
+    },
+    "dean": {
+      "enabled": true,
+      "description": "Dependency evaluation & audit notifier"
+    },
+    "iris": {
+      "enabled": true,
+      "description": "Intelligent review & inspection system"
+    },
+    "skip": {
+      "enabled": true,
+      "description": "Smart knowledge & information persistence"
+    },
+    "dave": {
+      "enabled": true,
+      "description": "Deploy automation & verification engine"
+    },
+    "ruby": {
+      "enabled": true,
+      "description": "Refactor utility & better-code yielder"
+    },
+    "arch": {
+      "enabled": true,
+      "description": "Architecture boundary enforcement"
+    },
+    "aria": {
+      "enabled": true,
+      "description": "Accessibility review & audit"
+    },
+    "dana": {
+      "enabled": true,
+      "description": "Data access & migration safety"
+    },
+    "gabe": {
+      "enabled": true,
+      "description": "API contract & breaking-change guard"
+    },
+    "luke": {
+      "enabled": true,
+      "description": "UI/UX component health"
+    },
+    "omar": {
+      "enabled": true,
+      "description": "Observability & logging review"
+    },
+    "pete": {
+      "enabled": true,
+      "description": "Performance patterns audit"
+    },
+    "reed": {
+      "enabled": true,
+      "description": "Resilience & error-handling check"
+    },
+    "seth": {
+      "enabled": true,
+      "description": "Security & secret detection"
+    },
+    "vera": {
+      "enabled": true,
+      "description": "Privacy & data protection review"
+    }
   },
   "git": {
     "workflow": "github-flow",
@@ -30,7 +91,10 @@
     "require_reviews": false
   },
   "integrations": {
-    "sonarqube": { "enabled": false, "project_key": "" }
+    "sonarqube": {
+      "enabled": false,
+      "project_key": ""
+    }
   },
   "planning": {
     "default_collaboration": "medium"
@@ -38,5 +102,6 @@
   "preferences": {
     "auto_commit": false,
     "verbose_output": false
-  }
+  },
+  "schema_version": "2.0.0"
 }
