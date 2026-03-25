@@ -40,34 +40,29 @@ Phases: 1 of 1 complete
 
 Theme: Hardened retest of two-step dispatch with all 5 triggers verified.
 
-## Current Milestone
-
-| 11 | Multi-Language Core | 11-01 | Complete | 2026-03-25 |
-Status: 🚧 In Progress
-Phases: 3 of 4 complete
-Phases: 0 of 4 complete
+**v1.0 Ship-Ready Product** (v1.0.0) ✓
+Status: Complete — SHIPPED
+Phases: 4 of 4 complete
 
 Theme: Production-ready pi-verify with multi-language support, configuration system,
-and npm publication. Exercises all 18 PALS modules.
+and npm publication.
 
 ## Phases
 
-| Phase | Name                        | Plans | Status   | Completed  |
+| Phase | Name | Plans | Status | Completed |
 | ----- | --------------------------- | ----- | -------- | ---------- |
-| 1     | Core Verify Command         | 01-01 | Complete | 2026-03-24 |
-| 2     | Test Output Formatting      | 02-01 | Complete | 2026-03-24 |
-| 3     | Watch Mode Support          | 03-01 | Complete | 2026-03-24 |
-| 4     | Error Summarization         | 04-01 | Complete | 2026-03-24 |
-| 13    | Publish Prep                | 13-01 | Complete    | 2026-03-25 |
-| 6     | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
-| 8     | Two-Step Dispatch Test      | 08-01 | Complete | 2026-03-24 |
-| 9     | Full Retest                 | 09-01 | Complete | 2026-03-24 |
-| 10    | Cleanup & Identity          | 10-01 | Complete | 2026-03-25 |
-| 11    | Multi-Language Core         | 11-01 | Complete | 2026-03-25 |
-
-- Phase 12: [████████████████████] 100% ✓ (Config & Parallel complete)
-  - Phase 13: [░░░░░░░░░░░░░░░░░░░░] 0% (Not started)
-    | 13 | Publish Prep | 13-01 | Planning | - |
+| 1 | Core Verify Command | 01-01 | Complete | 2026-03-24 |
+| 2 | Test Output Formatting | 02-01 | Complete | 2026-03-24 |
+| 3 | Watch Mode Support | 03-01 | Complete | 2026-03-24 |
+| 4 | Error Summarization | 04-01 | Complete | 2026-03-24 |
+| 5 | Adversarial Testing | 05-01 | Complete | 2026-03-24 |
+| 6 | Advisory Module Stress Test | 06-01 | Complete | 2026-03-24 |
+| 8 | Two-Step Dispatch Test | 08-01 | Complete | 2026-03-24 |
+| 9 | Full Retest | 09-01 | Complete | 2026-03-24 |
+| 10 | Cleanup & Identity | 10-01 | Complete | 2026-03-25 |
+| 11 | Multi-Language Core | 11-01 | Complete | 2026-03-25 |
+| 12 | Config & Parallel | 12-01 | Complete | 2026-03-25 |
+| 13 | Publish Prep | 13-01 | Complete | 2026-03-25 |
 
 Notes:
 
@@ -81,25 +76,17 @@ Notes:
 Focus: Package identity fix (rename to pi-verify, v1.0.0), remove complexity bait functions,
 deduplicate formatters, rewrite README as product docs.
 
-Plans: TBD (defined during /paul:plan)
-
 ### Phase 11: Multi-Language Core
 
 Focus: Add Rust, Python, Go, Swift detection with project detection and standard check commands.
-
-Plans: TBD (defined during /paul:plan)
 
 ### Phase 12: Config & Parallel
 
 Focus: .verifyrc.json configuration, parallel check execution, custom shell commands.
 
-Plans: TBD (defined during /paul:plan)
-
 ### Phase 13: Publish Prep
 
 Focus: npm-ready package.json, exports map, delete starters/, final polish for publication.
-
-Plans: TBD (defined during /paul:plan)
 
 ## Future Milestones
 
@@ -109,4 +96,4 @@ Plans: TBD (defined during /paul:plan)
 
 ---
 
-_Roadmap updated: 2026-03-25 — Phase 12 complete, Phase 13 (Publish Prep) in progress_
+_Roadmap updated: 2026-03-25 — v1.0 milestone complete, pi-verify ready for npm publication_
