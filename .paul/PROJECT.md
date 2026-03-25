@@ -15,13 +15,9 @@ feedback instead of requiring individual command execution and raw output parsin
 
 | Attribute    | Value       |
 | ------------ | ----------- |
-| Version      | 1.0.0-beta  |
-| Status       | In Progress |
+| Version      | 1.0.0       |
+| Status       | Shipped ✅  |
 | Last Updated | 2026-03-25  |
-| ------------ | ----------  |
-| Version      | 0.6.0       |
-| Status       | Shipped     |
-| Last Updated | 2026-03-24  |
 
 **Current system summary:**
 
@@ -38,34 +34,29 @@ feedback instead of requiring individual command execution and raw output parsin
 
 ## Scope Snapshot
 
-### Active
+### Validated (v1.0.0)
 
-- /verify command with all/test/lint/quick subcommands
-- Node.js project detection (package.json)
-- Multi-language project detection (Rust, Python, Go, Swift)
-- Structured pass/fail output with parsed test results
-- Progress callbacks for real-time status updates
-- Watch mode detection (Jest, Vitest)
-- Error summarization with categories and fix suggestions
-  - verify_check tool for model-callable use
-  - `.verifyrc.json` configuration for custom check commands
-  - Parallel execution for independent checks (typecheck, lint, format)
-- Node.js project detection (package.json)
-- Structured pass/fail output with parsed test results
-- Progress callbacks for real-time status updates
-- Watch mode detection (Jest, Vitest)
-- Error summarization with categories and fix suggestions
-- verify_check tool for model-callable use
+- [x] `/verify` command with all/test/lint/quick subcommands — v1.0
+- [x] Node.js project detection (package.json) — v0.1
+- [x] Multi-language project detection (Rust, Python, Go, Swift) — v1.0
+- [x] Structured pass/fail output with parsed test results — v0.1
+- [x] Progress callbacks for real-time status updates — v0.2
+- [x] Watch mode detection (Jest, Vitest) — v0.2
+- [x] Error summarization with categories and fix suggestions — v0.2
+- [x] `verify_check` tool for model-callable use — v0.1
+- [x] `.verifyrc.json` configuration for custom check commands — v1.0
+- [x] Parallel execution for independent checks (typecheck, lint, format) — v1.0
+- [x] Clean npm-publishable package with exports map — v1.0
 
-### Planned
+### Active (v1.1+)
 
-- Caching of check results — Phase 13+
-- Caching of check results
-- Custom check configurations
+### Planned (v1.1+)
+- Caching of check results — v1.2 consideration
+- Plugin ecosystem for custom checks — v1.3 consideration
 
 ### Out of Scope
 
-- None explicitly yet
+- IDE/editor integrations — future consideration
 
 ## Target Users
 
@@ -100,6 +91,10 @@ anything.
 | Top-level chalk import (not dynamic)                             | ESLint no-restricted-syntax rule forbids dynamic imports                 | 2026-03-24 | Active |
 | Error categorization is best-effort pattern matching             | Cannot guarantee parsing all tool output formats                         | 2026-03-24 | Active |
 | TODD post-task hook confirmed as enforcement gate                | Adversarial test proved regression blocking fires before commit          | 2026-03-24 | Active |
+| Config uses `null` for disabled checks                           | Allows explicitly disabling checks vs. omitting them                     | 2026-03-25 | Active |
+| Parallel runs independent checks first, test last               | Tests often depend on typecheck/lint; sequencing avoids false failures   | 2026-03-25 | Active |
+| `starters/` directory deleted before publish                    | Template files not needed in runtime package; clean tarball              | 2026-03-25 | Active |
+| Exports map added to package.json                               | Future-proof ESM/CJS dual compatibility for npm consumers                | 2026-03-25 | Active |
 
 ## Links
 
@@ -108,4 +103,4 @@ anything.
 
 ---
 
-_Last updated: 2026-03-25 after Phase 12 (Config & Parallel complete)_
+_Last updated: 2026-03-25 after v1.0 Ship-Ready Product (milestone complete)_
