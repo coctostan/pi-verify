@@ -204,12 +204,38 @@ STEP 2 (Enforcement p100):
 
 ---
 
-## Current: Next Milestone
+## ✅ v1.0 Ship-Ready Product
 
-**Version:** v0.8.0 (planned)  
-**Status:** 🚧 Planning  
-**Theme:** Multi-language support (Rust/Python/Go)
+**Completed:** 2026-03-25  
+**Duration:** ~75 minutes  
+**Version:** v1.0.0
+
+### Stats
+
+| Metric        | Value |
+|---------------|-------|
+| Phases        | 4 (phases 10–13) |
+| Plans         | 4 |
+| Files changed | 14 |
+
+### Key Accomplishments
+
+- **Cleanup & Identity (Phase 10):** Renamed package to `pi-verify`, bumped to v1.0.0, removed complexity bait functions (~249 lines), extracted shared `formatters.ts`, rewrote README as product docs
+- **Multi-Language Core (Phase 11):** Added Rust, Python, Go, and Swift project detection with language-specific check commands; new `src/detectors.ts` module with 28 new tests (54 total)
+- **Config & Parallel (Phase 12):** Implemented `.verifyrc.json` configuration system with schema validation; parallel execution of independent checks via `Promise.all()`; 72 tests passing
+- **Publish Prep (Phase 13):** Deleted `starters/` directory and obsolete test, added exports map to `package.json`, updated README with v1.0 feature docs; `npm pack` produces clean 14-file tarball
+- **67 tests passing** at ship with TypeScript strict mode, ESLint clean, Prettier formatted
+- **Production-ready npm package** — `pi-verify v1.0.0` ready to publish
+
+### Key Decisions
+
+| Decision | Phase | Rationale |
+|----------|-------|-----------|
+| Config uses `null` for disabled checks | 12 | Allows explicitly disabling checks vs. omitting |
+| Parallel runs independent checks first, test last | 12 | Tests often depend on typecheck/lint passing |
+| Deleted `starters/` entirely | 13 | Template files not needed in runtime package |
+| Exports map added to package.json | 13 | Future-proof ESM/CJS dual compatibility |
 
 ---
 
-_Last updated: 2026-03-24 after v0.4 completion_
+_Last updated: 2026-03-25 after v1.0 Ship-Ready Product_
