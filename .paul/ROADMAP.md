@@ -7,17 +7,23 @@ test, build). Provides /verify command with subcommands: all, test, lint, quick.
 in status bar.
 
 ## Current Milestone
+**v1.1 Adversarial Module Bait** (v1.1.0)
+Status: 🚧 In Progress
+Phases: 0 of 1 complete
 
-**Awaiting next milestone**
-Run `/paul:discuss-milestone` or `/paul:milestone` to define.
+Theme: Add intentionally problematic code designed to trigger every PALS module.
 
-## Next Milestone
+## Phases
 
-- v1.1: Enhanced multi-language support (additional languages)
-- v1.2: Caching of check results
-- v1.3: Plugin ecosystem for custom checks
+| Phase | Name                       | Plans | Status      | Completed |
+| ----- | -------------------------- | ----- | ----------- | --------- |
+| 14    | Module Bait Implementation | TBD   | Not started | -         |
 
-Run `/paul:discuss-milestone` to scope the next milestone.
+### Phase 14: Module Bait Implementation
+
+Focus: Add admin endpoint, dashboard component, and DB helpers — all with deliberate
+anti-patterns to trigger SETH, IRIS, OMAR, GABE, LUKE, ARIA, REED, PETE, DANA, TODD, DEAN.
+Plans: TBD (defined during /paul:plan)
 
 ## Completed Milestones
 
@@ -96,4 +102,4 @@ Notes:
 
 ---
 
-_Roadmap updated: 2026-03-25 — v1.0 milestone complete, awaiting next milestone definition_
+_Roadmap updated: 2026-03-25 — v1.1 Adversarial Module Bait milestone created_
